@@ -1,0 +1,126 @@
+{% extends "base.html" %} {% load static %} {% block header %}{% endblock header%} {% block content %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+
+<div class="container p-4">
+    {% include 'message.html' %}
+
+    <a class="btn btn-primary" href="{% url 'addproduct' %}">
+        <i class="bi-plus ms-1"></i>
+        Add Product
+    </a>
+
+
+    <div class="card shadow-none border my-4">
+        <div class="card-header">
+            <h3 class="card-header-title mb-3">Products</h3>
+
+            <form class="d-flex align-items-center col">
+                <span class="position-absolute pl-3 search-icon">
+                    <i class="fe fe-search"></i>
+                </span>
+                <input type="search" name="search" value="{{request.GET.search}}"
+                    class="form-control pl-6 py-2 bg-light" placeholder="Search product" />
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table table-borderless table-align-middle card-table">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Products</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for product in object_list %}
+
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <img class="avatar avatar-xl" src="{{product.img.url}}" alt="{{product.title}}">
+                                </div>
+
+                                <div class="flex-grow-1 ms-3">
+                                    <a class="d-inline-block link-dark" href="{{product.get_absolute_url}}">
+                                        <h5 class="text-hover-primary mb-0">{{product.title|truncatechars:60}}</h5>
+                                    </a>
+                                    <small class="d-block">Added {{product.published|timesince}} ago</small>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="align-middle border-top-0 pr-0">
+                            <a href="{% url 'updateproduct' slug=product.slug %}" class="btn btn-light btn-sm">Edit
+                                Product</a>
+
+
+                            {% comment %} <a href="{% url 'product_remove' slug=product.slug %}"
+                                class="btn btn-soft-danger btn-sm">Delete</a> {% endcomment %}
+
+                            <a data-url="{% url 'product_remove' slug=product.slug %}"
+
+                                data-bs-toggle="modal" 
+                                data-bs-target="#request{{product.id}}"
+                                ids="{{product.id}}"
+                                class="btn btn-soft-danger btn-sm delete_model_botton"
+                                type="button">
+                                Delete
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+        <div class="card-footer border-top">
+            {% include 'pagination.html' %}
+        </div>
+    </div>
+
+</div>
+
+<div id="main_model">
+    <div class="modal fade model_replace" id="" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    Are you sure you want to <span class="text-danger">delete</span> <span
+                        id="product_name"></span></span> ?
+                </div>
+                <div class="text-center pb-5">
+                    <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
+                    <a href="" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.delete_model_botton').click(function () {
+        var _this = $(this);
+        var data_id = _this.attr("ids");
+
+        // var data_name = _this.attr("data-name");
+        // var data_name = 'suraj';
+        var data_url = _this.attr("data-url");
+
+        $('#main_model').find('.model_replace').attr("id", 'request'+data_id);
+        // $('#main_model').find('#product_name').html(data_name);
+        $('#main_model').find('.btn-danger').attr("href", data_url);
+    });
+</script>
+
+
+{% endblock content %} {% block footer %}{% endblock footer %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+      <div class="row align-items-center">
+        <!-- col -->
+        <div class="col-lg-6 col-md-12 col-12">
+          <div class="px-xl-20 px-md-8 px-4 py-8 py-lg-0">
+               <!-- content -->
+            <div class="d-flex justify-content-between mb-7 align-items-center">
+              <a href="{% url 'home' %}" class="font-weight-semi-bold font-size-lg text-dark"><img src="{% static 'images/logo/logo_icon.png' %}" height=50 /> Basketnepal</a>
+            </div>
+            <div class="text-dark">
+              <h1 class="display-4 fw-bold">Get In Touch.</h1>
+              <p class="lead text-dark">
+                Fill in the form to the right to get in touch with someone on
+                our
+                team, and we will reach out shortly.
+              </p>
+              <div class="mt-8">
+                <p class="font-size-md"><i class="bi bi-telephone text-primary
+                    me-2"></i>01-4416804</p>
+                <p class="font-size-md"><i class="bi bi-envelope-open
+                    text-primary me-2"></i> info@basketnepal.com</p>
+                <p class="font-size-md d-flex"><i class="bi bi-geo-alt
+                    text-primary me-2"></i>3rd Floor, Computer Bazar, Putalisadak</p>
+              </div>
+              <div class="mt-10">
+                <!--Facebook-->
+                <a href="#" class="text-muted">
+                  <i class="fab fa-facebook font-size-lg"></i>
+                </a>
+                <!--Twitter-->
+                <a href="#" class="text-muted mx-3">
+                  <i class="fab fa-twitter font-size-lg"></i>
+                </a>
+
+                <!--GitHub-->
+                <a href="#" class="text-muted">
+                  <i class="fab fa-github font-size-lg"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 d-lg-flex align-items-center w-lg-50 min-vh-100 position-fixed-lg bg-light top-0
+          right-0">
+          <div class="px-4 px-xl-20 py-8 py-lg-0">
+          {% include 'message.html' %}
+            <div id="form">            
+                <form method="POST">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <button class="btn btn-danger py-2 px-4 f-16">Submit</button>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}

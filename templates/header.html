@@ -1,0 +1,98 @@
+{% load static %}
+ 
+<header id="header" class="navbar navbar-expand navbar-end navbar-light bg-white d-none d-md-block py-0 shadow">
+
+  <div class="container">
+
+    <nav class="navbar-nav-wrap">
+      <a class="navbar-brand" href="{% url 'home' %}">
+        <img class="" src="{% static 'images/logo/logo_icon.png' %}" alt="Basketnepal Logo" height=45>
+        <span class="fw-600 text-dark f-20">Basketnepal</span>
+      </a>
+
+      <div class="navbar-collapse">
+        <ul class="navbar-nav">
+
+          <form method="get" action="{% url 'products_listview' %}" class="w-md-50 mx-auto">
+            <div class="input-card border shadow-none rounded-pill py-0 border-dark">
+              <div class="input-card-form">
+                <input name="q" value="{{request.GET.q}}" type="text" class="form-control bg-transparent fw-500"
+                  placeholder="Search for product , service ..">
+              </div>
+              <button type="submit" class="btn btn-sm py-0"><i class="bi bi-search text-primary fs-3"></i></button>
+            </div>
+          </form>
+
+          <li class="nav-item">
+            <a href="{% url 'message_list' %}" class="nav-link fw-500">Messages
+              {% if unread_message %}
+              <span class="legend-indicator bg-danger"></span>
+              {% endif %}
+            </a>
+          </li>
+
+          {% if request.user.is_authenticated %}
+
+          <li class="nav-item">
+            {% if user.seller %}
+            <a href="{% url 'dashboard' %}" class="nav-link text-danger fw-500">Switch to Selling</a>
+            {% else %}
+            <a href="{% url 'seller_profile' %}" class="nav-link fw-500">Become a Seller</a>
+            {% endif %}
+          </li>
+
+          <li class="nav-item">
+
+            <div class="d-flex gap-1 align-items-center">
+              <a href="{% url 'customerinfo' %}" class="nav-link fw-500">Hi {{user.first_name}} !</a>
+
+              <div class="avatar avatar-circle avatar-sm border avatar-soft-secondary">
+                {{user.profile_picture}}
+              </div>
+            </div>
+
+            {% else %}
+            <div class="d-flex">
+              <a class="text-danger nav-link fw-600" href="{% url 'user_login' %}">Log in</a>
+              <div class="nav-link px-0">|</div>
+              <a class="text-danger nav-link fw-600" href="{% url 'signup' %}">Signup</a>
+            </div>
+            {% endif %}
+
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="border-top"></div>
+
+  <div class="container">
+    <ul class="nav py-1 justify-content-start">
+
+      <li class="nav-item border-end border-2">
+        <a href="{% url 'products_listview' %}" class="nav-link fw-600 text-info">Products</a>
+      </li>
+
+      {% for i in all_sectors %}
+      <li class="nav-item">
+        <a href="{% url 'stores' i.slug %}" class="nav-link fw-600 text-dark">{{i.name}}</a>
+      </li>
+      {% endfor %}
+
+    </ul>
+
+    <ul class="nav py-1 ">
+
+      <li class="nav-item">
+        <a href="{% url 'request' %}" class="nav-link fw-600 text-dark">Post your Request</a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'request_list' %}" class="nav-link fw-600 text-dark">Customer's Request</a>
+      </li>
+
+    </ul>
+  </div>
+
+
+</header>

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+
+{% block content %}
+
+<div class="py-9">
+    <div class="container">
+        <div class="row ">
+            <div class="offset-xl-2 col-xl-8 offset-lg-1 col-lg-10 col-md-12 col-12">
+                <div class="text-center mb-5">
+                    <h1 class=" display-2 font-weight-bold">Basketnepal Blog</h1>
+                    <p class=" lead">
+                        Our features, journey, tips and us being us. Lorem ipsum dolor sit amet, accumsan in,
+                        tempor dictum neque.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="pb-8">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+
+                <div class="flush-nav">
+                    <nav class="nav">
+                        <a class="nav-link {% if '/blog/' in request.path %}active{% endif %} pl-0"
+                            href="{% url 'blog_list' %}">All</a>
+
+                        {% for i in blog_category %}
+                        <a class="nav-link {% if i.get_absolute_url in request.path %}active{% endif %}"
+                            href="{% url 'blog_category' slug=i.slug %}">{{i.name}}</a>
+                        {% endfor %}
+
+                    </nav>
+                </div>
+            </div>
+
+            {% for i in object_list %}
+            <div class="col-xl-3 col-lg-3 col-md-6 col-12">
+
+                <div class="card mb-4 shadow-lg">
+                    <a href="{{i.get_absolute_url}}" class="card-img-top">
+
+                        <img src="{{i.image.url}}" class="card-img-top rounded-top" alt=""></a>
+
+                    <div class="card-body">
+                        <p class="font-size-xs mb-0 float-right"> <i class="fe fe-clock"></i> {{i.published|timesince}}
+                            ago</p>
+                        <a href="{{i.category.get_absolute_url}}"
+                            class="font-size-sm mb-2 font-weight-semi-bold d-block text-{{i.category.color}}">{{i.category.name}}</a>
+
+                        <a href="{{i.get_absolute_url}}" class="text-inherit h3">{{i.title}}</a>
+
+                        <p>{{i.description|safe|truncatechars:75}}</p>
+
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock content %}

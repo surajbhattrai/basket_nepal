@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+{% load static %}
+{% load mptt_tags %}
+{% load templatehelpers %}
+
+
+
+{% block meta %}
+<title>{{business.design.heading}} | Online Shopping in Nepal - basketnepal.com</title>
+<meta property="og:title" content="{{business.design.heading}} | Online Shopping in Nepal - basketnepal.com" />
+<meta name="description" property="og:description" content="{{business.design.sub_heading}}">
+<meta property="og:description" content="{{business.design.sub_heading}}" />
+<meta name="keywords"
+  content="online shopping in nepal, online shopping in kathmandu, online sale in nepal, basket nepal, basketnepal" />
+<meta property="og:url" content="https://www.basketnepal.com/" />
+<meta property="og:type" content="website">
+<meta property="og:image" content="{% static 'images/logo/meta_logo.png' %}">
+{% endblock %}
+
+
+
+{% block content %}
+
+<main role="main" style="background: #f2f5f8;" class="pt-3">
+
+  <div class="container">
+    {% include 'message.html' %}
+  </div>
+
+
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-lg-3 mb-10 d-none d-md-block">
+
+        <div class="nav nav-pills nav-vertical p-2 bg-white rounded" style="flex-direction:row !important;">
+
+          <select class="form-select border-3 bg-light py-2" onchange="location = this.value;">
+
+            {% if request.GET.location %}
+            <option>{{request.GET.location}}</option>
+            {% endif %}
+
+            <option value="{{request.path}}?location= "> <i class="bi bi-geo-alt"></i>
+              All Nepal</option>
+
+            {% for i in districts %}
+            {% with params=request.GET.urlencode %}
+            <option value="{{request.path}}?location={{i.district}}">{{i.district}}</option>
+            {% endwith %}
+            {% endfor %}
+          </select>
+
+          <p class="m-3 fw-600 f-13 text-uppercase text-dark">Category</p>
+
+          <a class="dropdown-item {% if not request.GET %} active {% endif %} f-15" href="{% url 'products_listview' %}">
+            All Products
+          </a>
+
+          {% for node in category %}
+
+          {% comment %} <a class="dropdown-item {% if node.slug == request.GET.category %} active {% endif %} f-15 "
+            href="{{request.url}}?category={{ node.slug }}">
+            {{node.name}}
+          </a> {% endcomment %}
+
+            {% with params=request.GET.urlencode %}
+            <a class="dropdown-item f-15 {% if node.slug == request.GET.category %} active {% endif %}"
+              href="{% relative_url node.slug 'category' params %}"> {{node.name}} </a>
+            {% endwith %}
+
+          {% if node.slug == request.GET.category %}
+          <div class="nav-collapse">
+            {% for i in sub_category %}
+            {% with params=request.GET.urlencode %}
+            <a class="nav-link fs-5 {% if i.slug == request.GET.subcategory %} active {% endif %}"
+              href="{% relative_url i.slug 'subcategory' params %}"> {{i.name}} </a>
+            {% endwith %}
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% endfor %}
+
+
+      </div>
+
+    </div>
+
+
+    <div class="col-lg-9">
+      
+      <div class="row d-md-none">
+        <div class="col-auto mb-2 mb-lg-0 d-md-none">
+          <a class="btn btn-sm rounded-pill fw-500 f-13 py-1 px-2 {% if request.GET.category %} btn-soft-primary {% else %} btn-white text-dark {% endif %}" data-bs-toggle="offcanvas" href="#categoryselect" role="button">Category<i class="bi bi-caret-down-fill f-12 ms-2"></i>
+          </a>
+        </div>
+
+        <div class="col-auto mb-2 mb-lg-0 d-md-none">
+          <select class="form-select form-select-sm rounded-pill fw-500 f-13 py-1" onchange="location = this.value;">
+            {% if request.GET.location %}
+            <option class="bg-soft-primary">{{request.GET.location}}</option>
+            {% endif %}
+            <option value="{% relative_url '' 'location' request.GET.urlencode %}">All Nepal</option>
+            {% for i in districts %}
+            {% with params=request.GET.urlencode %}
+            <option value="{% relative_url i.district 'location' params %}">{{i.district}}</option>
+            {% endwith %}
+            {% endfor %}
+          </select>
+        </div>
+
+      </div>
+
+      {% if request.GET.q %}
+      <div class="mb-3">
+        <h5>{{ products|length}} Results <span class="text-body">for "{{request.GET.q}}"</span></h5>
+      </div>
+      {% endif %}
+
+
+      {% if request.GET.subcategory %}
+      <div class="mb-5">
+        <p class="fw-500 f-18 text-dark">What are you looking for?</p>
+        {% for i in sub_subcategory %}
+        {% with params=request.GET.urlencode %}
+        <a href="{% relative_url i.slug 'sub_subcategory' params %}"
+          class="btn {% if request.GET.sub_subcategory == i.slug %} btn-soft-success{% else %}btn-soft-dark {% endif %}  rounded-pill btn-sm fw-500">{{i.name}}</a>
+        {% endwith %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+
+
+      <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-3 mb-3 mb-10">
+
+        {% for i in products %}
+        {% include 'snippets/product_card.html' %}
+        {% empty %}
+
+        <div class="mx-auto content-space-4 text-center">
+          <img height="200" src="{% static 'images/misc/notfound.png' %}" alt="Product not found in basketnepal">
+          <p class="f-20 fw-500 pt-2">No Products Found !</p>
+
+          <button href="{% url 'home' %}" class="btn btn-dark btn-sm rounded-pill">Go to Homepage</button>
+        </div>
+
+
+        {% endfor %}
+      </div>
+
+      <nav class="mt-4">
+        {% if products.has_other_pages %}
+        <ul class="pagination justify-content-center">
+          {% if products.has_previous %}
+          <li class="page-item"><a class="page-link"
+              href="{% relative_url products.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+          </li>
+          {% else %}
+          <li class="page-item disabled"><a class="page-link">Previous</a></li>
+          {% endif %}
+          {% for i in products.paginator.page_range %}
+          {% if products.number == i %}
+          <li class="page-item active"><a class="page-link">{{ i }} <a class="sr-only">(current)</a>
+          </li>
+          {% elif i > products.number|add:'-5' and i < products.number|add:'5' %} <li class="page-item"><a
+              class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}">{{ i }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            {% if products.has_next %}
+            <li class="page-item"><a class="page-link"
+                href="{% relative_url products.next_page_number 'page' request.GET.urlencode %}">Next</a>
+            </li>
+            {% else %}
+            <li class="disabled page-item"><a class="page-link">Next</a></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+      </nav>
+
+    </div>
+
+  </div>
+  </div>
+
+</main>
+
+
+
+<!-- Catgeory Offcanvas -->
+
+<div class="offcanvas offcanvas-bottom h-75" tabindex="-1" id="categoryselect" style="overflow: scroll;">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="categoryselect">Choose Category</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+
+  <div class="nav nav-pills nav-vertical p-2 " style="flex-direction:row !important;">
+
+    <a class="dropdown-item {% if not request.GET %} active {% endif %} f-15" href="{% url 'products_listview' %}">
+      All Products
+    </a>
+
+    {% for node in category %}
+    <a class="dropdown-item {% if node.slug == request.GET.category %} active {% endif %} f-15 "
+      href="{{request.url}}?category={{ node.slug }}">
+      {{node.name}}
+    </a>
+    {% if node.slug == request.GET.category %}
+    <div class="nav-collapse">
+      {% for i in sub_category %}
+      {% with params=request.GET.urlencode %}
+      <a class="nav-link fs-5 {% if i.slug == request.GET.subcategory %} active {% endif %}"
+        href="{% relative_url i.slug 'subcategory' params %}"> {{i.name}} </a>
+      {% endwith %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endfor %}
+
+  </div>
+
+</div>
+
+
+
+
+
+<script>
+  (function () {
+    var slidesPerView = new Swiper('.js-swiper-slides-per-view-auto', {
+      slidesPerView: 3,
+      spaceBetween: 20,
+      autoplay: true,
+      loop: true,
+      navigation: {
+        nextEl: '.js-swiper-slides-per-view-auto-button-next',
+        prevEl: '.js-swiper-slides-per-view-auto-button-prev',
+      },
+      breakpoints: {
+        640: {
+          slidesPerView: 3,
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 4,
+          spaceBetween: 40,
+        },
+        1024: {
+          slidesPerView: 5,
+          spaceBetween: 50,
+        },
+      }
+    });
+  })()
+</script>
+
+
+
+{% endblock content %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="pt-2 pb-5">
+    <div class="container">
+
+        <div class="row mt-0 mt-md-4 f-16">
+
+            {% include 'customer_sidebar.html' %}
+
+            <div class="col-lg-9 col-md-8 col-12">
+               {% include 'message.html' %} 
+
+                <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-3 mb-3"> 
+                    {% for i in saved %} 
+
+                    <div class="col mb-4 d-none d-md-block">
+                        <div class="card card-bordered shadow-none">
+                            <div class="card-pinned">
+                                <img class="card-img-top" src="{{i.product.img.url}}" alt="{{i.product.title}}" style="height:250px; object-fit:cover;">
+                            </div>
+                    
+                            <div class="p-3 border-top">
+                                <a class="text-brown f-15" href="{{i.product.get_absolute_url}}">{{i.product.title|truncatechars:70}}</a>
+                                <h4 class="pt-2">Rs. {{i.product.price}}</h4>
+
+                                <a href="{% url 'wishlist_remove' i.product.slug %}" class="text-danger fw-600 f-14">Remove form wishlist</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card border shadow-none my-2 py-2 d-md-none">
+                        <div class="d-flex gap-3">
+                            <div>
+                                <img class="avatar avatar-xl" src="{{i.product.img.url}}">
+                            </div>
+                            <div>
+                                <a class="text-brown sf-15" href="{{i.product.get_absolute_url}}">{{i.product.title|truncatechars:70}}</a>
+                                <h4 class="pt-2">Rs. {{i.product.price}}</h4>
+
+                                <a href="{% url 'wishlist_remove' i.product.slug %}" class="text-danger fw-600 f-14">Remove form wishlist</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% include 'pagination.html' %}
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

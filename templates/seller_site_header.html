@@ -1,0 +1,97 @@
+{% load static %}
+
+{% include 'header.html' %}
+
+<div class="container">
+
+
+
+
+<header class="navbar navbar-expand-lg navbar-dark bg-dark navbar-end my-5 rounded d-none d-md-block px-5">
+  <nav class="navbar-nav-wrap">
+
+    <a class="navbar-brand" href="{{seller.get_absolute_url}}">
+      {% if seller.logo %}<img class="avatar avatar-sm rounded-circle" src="{{seller.get_store_image}}"
+        alt="Logo of {{seller.title}}"> {% endif %}
+      <span class="f-17 fw-600 text-white">{{seller.title}}</span>
+    </a>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-default">
+        <i class="bi-list"></i>
+      </span>
+      <span class="navbar-toggler-toggled">
+        <i class="bi-x"></i>
+      </span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+
+        <li class="nav-item">
+          <a href="{{seller.get_absolute_url}}" class="nav-link text-white">Home</a>
+        </li>
+
+        {% for i in pages %}
+        <li class="nav-item">
+          <a href="{{i.get_absolute_url}}" class="nav-link text-white">{{i.title}}</a>
+        </li>
+        {% endfor %}
+
+      </ul>
+    </div>
+
+  </nav>
+</header>
+
+</div>
+
+<header class="d-md-none pt-2">
+  <nav class="text-center">
+    <a href="{{seller.get_absolute_url}}">
+      {% if seller.logo %}<img class="avatar rounded-circle border" src="{{seller.get_store_image}}"
+        alt="Logo of {{seller.title}}"> {% endif %}
+      <p class="f-17 fw-600 text-dark">{{seller.title}}</p>
+    </a>
+
+    {% if pages %}
+    <div class="js-nav-scroller hs-nav-scroller-horizontal">
+
+      <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+          <i class="bi-chevron-left"></i>
+        </a>
+      </span>
+
+      <span class="hs-nav-scroller-arrow-next" style="display: none;">
+        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+          <i class="bi-chevron-right"></i>
+        </a>
+      </span>
+
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a href="{{seller.get_absolute_url}}" class="nav-link fw-semi-bold">Home</a>
+        </li>
+
+        {% for i in pages %}
+        <li class="nav-item">
+          <a href="{{i.get_absolute_url}}" class="nav-link fw-semi-bold">{{i.title}}</a>
+        </li>
+        {% endfor %}
+
+      </ul>
+    </div>
+    {% endif %}
+
+  </nav>
+</header>
+
+
+<script>
+  (function () {
+    new HsNavScroller('.js-nav-scroller')
+  });
+</script>

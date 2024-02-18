@@ -1,0 +1,33 @@
+{
+    "name": "Basketnepal",
+    "short_name": "Basketnepal",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#FFF",
+    "theme_color": "#ED4C78",
+    "description": "Search Everything",
+    "dir": "ltr",
+    "lang": "en-US",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/static/images/logo/logo-sm.png",
+            "type": "image/png",
+            "sizes": "96x96"
+        }, 
+
+        {
+            "src": "/static/images/logo/logo-144.png",
+            "type": "image/png",
+            "sizes": "144x144"
+        },
+
+        {
+            "src": "/static/images/logo/logo-lg.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "maskable"
+        }
+]
+}

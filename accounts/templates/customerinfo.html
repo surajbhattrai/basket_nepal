@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="pt-2 pb-5">
+    <div class="container">
+
+        <div class="row mt-0 mt-md-4 f-16">
+ 
+            {% include 'customer_sidebar.html' %}
+
+            <div class="col-lg-9 col-md-8 col-12">
+
+                {% include 'message.html' %}
+
+                <div class="card mb-4 shadow-none border rounded-sm bg-light">
+                    <div class="card-header bg-light pb-2">
+                        <h3 class="mb-0">Account information</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item px-0 pt-0 pb-4 border-0 bg-light">
+                                <div class="row px-0">
+                                    <div class="col-md-3 col-6">
+                                        <span class="h5">Mobile Number</span>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <span class="d-block">{{user.phone}}</span>
+                                    </div>
+                                    {% comment %} <div class="col-auto">
+                                        <a href="#!" >Edit phone</a>
+                                    </div> {% endcomment %}
+                                </div>
+                            </li>
+
+                            <li class="list-group-item px-0 pt-0 border-0 bg-light">
+                                <div class="row px-0">
+                                    <div class="col-md-3 col-6">
+                                        <span class="h5">Password</span>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <span class="d-block">●●●●●●●●</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <a href="{% url 'change_password' %}">Change password</a>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+
+                <div class="card shadow-none border rounded-sm bg-light">
+                    <div class="card-header bg-light pb-0">
+                        <h3 class="mb-0">Personal information</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="mb-2 avatar avatar-xl avatar-circle">
+                           {{user.profile_picture}}
+                        </div>
+                        
+                        <ul class="list-group list-group-flush">
+                            
+                            <li class="list-group-item px-0 pt-0 border-0 bg-light">
+                                
+                                <div class="row px-0">
+                                    <div class="col-md-3 col-6">
+                                        <span class="h5">First Name</span>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <span class="d-block">{{user.first_name}}</span>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item px-0 border-0 bg-light">
+                                <div class="row px-0">
+                                    <div class="col-md-3 col-6">
+                                        <span class="h5">Last Name</span>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <span class="d-block">{{user.last_name}}</span>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item px-0 border-0 bg-light">
+                                <div class="row px-0">
+                                    <div class="col-md-3 col-6">
+                                        <span class="h5">Email</span>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <span class="d-block">{{user.email}}</span>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <div>
+                                <a href="{% url 'user_update' %}" class="px-0"><i class="fe fe-edit-2"></i> Edit information</a>
+                            </div>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

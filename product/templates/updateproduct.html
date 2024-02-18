@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<style>
+    .custom-file-label {
+        display: none;
+    }
+</style>
+
+
+
+<div class="container p-4">
+
+
+    <form method="POST" id="productForm" data-url="{% url 'ajax_sub_cat' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-xl-9 col-lg-8 col-md-12 col-12">
+
+                <div class="card rounded-0 shadow-none border mb-5">
+
+                    <div class="card-header bg-light py-3">
+                        <p class="text-dark fw-semi-bold">Basic Information</p>
+                    </div>
+
+                    <div class="card-body">
+                    
+                        <div class="row">
+                            <div class="col-md-8">
+                                <label for="id_title" class="form-label">Product Name<span
+                                        class="ml-1 text-danger">*</span></label>
+                                {{form.title|as_crispy_field}}
+                            </div>
+
+                            <div class="col-12 col-md-6 py-3">
+                                <label for="id_price" class="form-label">Price</label>
+                                {{form.price|as_crispy_field}}
+                            </div>
+
+                            <div class="col-12 col-md-6 py-3">
+                                <label for="id_brand" class="form-label">Brand</label>
+                                {{form.brand|as_crispy_field}}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="id_category" class="form-label">Select Business Sector</label>
+                                {{form.buisness_sector|as_crispy_field}}
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <label for="id_category" class="form-label">Select Category</label>
+                                {{form.category|as_crispy_field}}
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <label class="form-label">Related Subcategory</label>
+                                {{form.sub_category|as_crispy_field}}
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <label class="form-label">Secondary Subcategory</label>
+                                {{form.sub_subcategory|as_crispy_field}}
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card rounded-0 shadow-none border mb-5">
+
+                    <div class="card-header bg-light rounded-0 py-2">
+                        <p class="mb-0 text-dark font-weight-medium">Detail Information</p>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-9 mb-2">
+                                <label for="postTitle" class="form-label">Add Feature Points</label>
+                                {{form.hightlight_one|as_crispy_field}}
+                                {{form.hightlight_two|as_crispy_field}}
+                                {{form.hightlight_three|as_crispy_field}}
+                                {{form.hightlight_four|as_crispy_field}}
+                                {{form.hightlight_five|as_crispy_field}}
+
+                                <div class="collapse" id="points">
+                                    {{form.hightlight_six|as_crispy_field}}
+                                    {{form.hightlight_seven|as_crispy_field}}
+                                    {{form.hightlight_eight|as_crispy_field}}
+                                    {{form.hightlight_nine|as_crispy_field}}
+                                    {{form.hightlight_ten|as_crispy_field}}
+                                </div>
+                                
+                            </div>
+
+                            <div class="text-center">
+                                <a class="btn btn-light btn-sm px-10 border" role="button" data-bs-toggle="collapse"
+                                    href="#points"><i class="fas fa-angle-double-down mr-1"></i> Add more points</a>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="my-2">
+                            <label class="form-label">Description</label>
+                            {{form.media}}
+                            {{form.description|as_crispy_field}}
+                        </div>
+
+                        <div class="my-2">
+                            <label class="form-label">Product Specification</label>
+                            {{form.media}}
+                            {{form.specification|as_crispy_field}}
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card rounded-0 shadow-none border mb-5">
+
+                    <div class="card-header bg-light rounded-0 py-2">
+                        <p class="mb-0 text-dark font-weight-medium">Product Images</p>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="form-group">
+                            <label>Add Default Product Image <span class="text-danger ml-1">*</span></label>
+                            <div>
+                                <img src="{{form.instance.img.url}}" class="img-4by3-xxl rounded shadow my-3">
+                            </div>
+                            {{form.img|as_crispy_field}}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Add Second Image</label>
+                            {% if form.instance.img_second %}
+                            <img src="{{form.instance.img_second.url}}" class="img-4by3-xxl rounded shadow my-3">
+                            {% endif %}
+                            {{form.img_second|as_crispy_field}}
+                        </div>
+
+                        <div class="collapse" id="images">
+
+                            <div class="form-group">
+                                <label>Add Third Image</label>
+                                {% if form.instance.img_third %}
+                                <img src="{{form.instance.img_third.url}}" class="img-4by3-xxl rounded shadow my-3">
+                                {% endif %}
+                                {{form.img_third|as_crispy_field}}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Add Forth Image</label>
+                                {% if form.instance.img_forth %}
+                                <img src="{{form.instance.img_forth.url}}" class="img-4by3-xxl rounded shadow my-3">
+                                {% endif %}
+                                {{form.img_forth|as_crispy_field}}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Add Fifth Image</label>
+                                <div>
+                                    {% if form.instance.img_fifth %}
+                                    <img src="{{form.instance.img_fifth.url}}" class="img-4by3-xxl rounded shadow my-3">
+                                    {% endif %}
+                                </div>
+                                {{form.img_fifth|as_crispy_field}}
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <a class="btn btn-light btn-sm px-10 border" role="button" data-bs-toggle="collapse"
+                                href="#images"><i class="fas fa-angle-double-down mr-1"></i> Add more images</a>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="card rounded-0 shadow-none border mb-5">
+                    <div class="card-header bg-light rounded-0 py-2">
+                        <p class="mb-0 text-dark font-weight-medium">Product Video</p>
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <label for="postTitle" class="form-label">Video URL</label>
+                            {{form.video|as_crispy_field}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <button id="submit_button" type="submit" class="btn btn-primary rounded-0 px-10">Update
+                        Product</button>
+                </div>
+
+            </div>
+
+
+            <div class="col-xl-3 col-lg-4 col-md-12 col-12">
+
+                <div class="">
+                    <div class="card mt-4 mt-lg-0 mb-5 rounded-0 shadow-none border">
+                        <div class="card-header bg-light rounded-0 py-2">
+                            <p class="mb-0 text-dark font-weight-medium">Status</p>
+                        </div>
+                        <ul class="list-group list-group-flush rounded-0">
+
+                            <li class="list-group-item">
+                                <span>Status</span>
+                                <h5>
+                                    {{product.status}}
+                                </h5>
+                            </li>
+
+                            <li class="list-group-item">
+                                <span>Created by:</span>
+                                <div class="d-flex mt-2">
+                                    <img src="{{user.seller.get_store_image}}" alt=""
+                                        class="avatar-sm rounded-circle" />
+                                    <div class="ml-2 my-auto">
+                                        <h5>{{user.seller.title}}</h5>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item border-bottom">
+                                <span>Created on:</span>
+                                <h5>{{product.published|date:"jS F, h:iA"}}</h5>
+                            </li>
+                    
+                            <li class="list-group-item border-bottom">
+                                <span>Last Modified:</span>
+                                <h5>{{product.updated|timesince}} ago</h5>
+                            </li>
+
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script>
+    $("#id_buisness_sector").change(function () {
+        var url = $("#productForm").attr("data-url");
+        var categoryId = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'category': categoryId
+            },
+            success: function (data) {
+                $("#id_category").html(data);
+            }
+        });
+
+    });
+
+    $("#id_category").change(function () {
+        var url = $("#productForm").attr("data-url");
+        var categoryId = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'category': categoryId
+            },
+            success: function (data) {
+                $("#id_sub_category").html(data);
+            }
+        });
+
+    });
+
+    $("#id_sub_category").change(function () {
+        var url = $("#productForm").attr("data-url");
+        var categoryId = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'category': categoryId
+            },
+            success: function (data) {
+                $("#id_sub_subcategory").html(data);
+            }
+        });
+
+    });
+
+
+    $('#productForm').submit(function (event) {
+        $('#submit_button').attr('disabled', true);
+    });
+
+</script>
+
+
+
+<script>
+    (function () {
+        new HSAddField('.js-add-field', {
+            addedField: el => {
+                el.querySelectorAll('.js-select-dynamic').forEach(item => {
+                    HSCore.components.HSTomSelect.init(item)
+                })
+            }
+        })
+
+    })()
+</script>
+
+
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}
+
+
+
+
+
+
+
+
+
+
+                       
+
+

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+
+<div class="container content-space-t-2">
+    <div class="flex-grow-1 mx-auto" style="max-width: 28rem;">
+
+        <div class="text-center mb-5 mb-md-7">
+            <h1 class="h2">Welcome back</h1>
+            <p>Login to manage your account.</p>
+        </div>
+
+        <form action="{% url 'user_login' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label class="form-label" for="id_phone">Your phone</label>
+                {{form.phone|as_crispy_field}}
+            </div>
+
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <label class="form-label" for="id_passowrd">Password</label>
+                    <a class="form-label-link" href="{% url "custom_password_reset" %}">Forgot Password?</a>
+                </div>
+                {{form.password|as_crispy_field}}
+            </div> 
+
+            {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}" />
+            {% endif %}
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-lg">Log in</button>
+            </div>
+
+            <div class="text-center">
+                <p>Don't have an account yet? <a class="link" href="{% url 'signup' %}">Sign up here</a></p>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block footer %}{% endblock footer %}

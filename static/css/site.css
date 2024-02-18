@@ -1,0 +1,94 @@
+.f-12{
+    font-size: 12px;
+}
+
+.f-13{
+    font-size: 13px;
+}
+
+.f-14{
+    font-size: 14px;
+}
+
+.f-15{
+    font-size: 15px;
+}
+
+.f-16{
+    font-size: 16px;
+}
+
+.f-17{
+    font-size: 17px;
+}
+
+.f-18{
+    font-size: 18px;
+}
+
+.f-19{
+    font-size: 19px;
+}
+.f-20{
+    font-size: 20px;
+}
+
+.fw-100{
+    font-weight: 100;
+}
+
+.fw-200{
+    font-weight: 200;
+}
+
+.fw-300{
+    font-weight: 300;
+}
+
+.fw-400{
+    font-weight: 400;
+}
+
+.fw-500{
+    font-weight: 500;
+}
+
+.fw-600{
+    font-weight: 600;
+}
+
+.fw-700{
+    font-weight: 700;
+}
+
+.fw-800{
+    font-weight: 800;
+}
+.fw-900{
+    font-weight: 900;
+}
+
+.text-brown {
+    color: #4a4a4a !important;
+}
+
+.text-soft-dark {
+    color: #474545!important;
+}
+
+
+.transform100 {
+    transform: translate(-200px , -100px) !important;
+}
+
+@media (max-width: 576px) {
+    .banner-sm {
+      height: 300px !important;
+      object-fit: cover;
+    }
+  }
+
+
+.icon-bold {
+    -webkit-text-stroke: 1px;
+}

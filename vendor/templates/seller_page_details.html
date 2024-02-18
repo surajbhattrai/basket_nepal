@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load templatehelpers %}
+
+{% block header %}{% endblock header %}
+
+{% load mptt_tags %}
+
+
+{% block meta %}
+    <title> {{seller.title}} | Stores Near by {{seller.address.district.district}} - basketnepal.com </title>
+    <meta property="og:title" content="{{seller.title}} | Stores Near by {{seller.address.district.district}} - basketnepal.com" />
+
+    <meta name="description" property="og:description" content="Shop online at {{seller.title}} with Basketnepal">
+    <meta property="og:description" content="Shop online at {{seller.title}} with Basketnepal | Stores Near by {{seller.address.district.district}}" />
+
+    <meta name="keywords" content="basket nepal, basketnepal , {{seller.title}} ,  {% for i in seller.seller_type.all %}{{i.name}} near {{seller.address.district.district}} , {% endfor %}" />
+    
+    <meta property="og:url" content="https://www.basketnepal.com/" />
+    <meta property="og:type" content="company">
+    <meta property="og:image" content="{{seller.get_store_image}}">
+{% endblock %}
+
+
+{% block content %}
+
+{% include 'seller_site_header.html' %}
+
+<div class="border-top">    
+</div>
+
+<div class="container">
+  {% include 'message.html' %}
+</div>
+
+<div class="container content-space-t-1 content-space-b-2  ">
+    <div class="w-lg-65 mx-lg-auto ">
+        <div class="mb-4 ">
+          <h1>{{page.title}}</h1>
+        </div>
+        <hr>
+        {{page.content|safe}}
+      </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,48 @@
+<div class="col mb-4 d-none d-md-block ">
+    <div class="card card-flush shadow-none h-100 bg-transparent">
+
+        <a class="card-pinned" href="{{i.get_absolute_url}}">
+            <img class="card-img" src="{{i.img.url}}" alt="Image of {{i.name}}" style="height:250px; object-fit:cover;">
+
+            <div class="card-pinned-top-start">
+                <div class="d-flex gap-3">
+                    {% for icon in i.seller.badge.all %}
+                    <img class="p-0" src="{{icon.image.url}}" >
+                    {% endfor %}
+                </div>
+              </div>
+    
+              <div class="card-pinned-bottom-end">
+                <span class="badge rounded-pill bg-light text-dark">
+                  <i class="bi-geo-alt"></i> {{i.seller.address.district.district}}
+                </span>
+              </div>
+        </a>
+
+        <div class="py-3 px-1">
+            <p class="fw-500 f-13 mb-1 text-body">{{i.seller}}</p>
+
+            <a class="card-title f-17 fw-500 text-dark" href="{{i.get_absolute_url}}">{{i.title|truncatechars:70}}</a>
+                        
+        </div>
+    </div>
+</div> 
+
+
+
+
+<div class="card shadow-none my-2 py-2 d-md-none">
+    <div class="d-flex gap-3">
+        <img class="avatar avatar-xxl border" src="{{i.img.url}}" alt="Image of {{i.name}}">
+
+        <div>
+            <a class="text-brown f-14 stretched-link" href="{{i.get_absolute_url}}">{{i.title}}</a>
+            <div class="d-flex gap-3">
+                {% for icon in i.seller.badge.all %}
+                  <img class="avatar" src="{{icon.image.url}}" >
+                {% endfor %}
+            </div>
+            <p class="f-13 fw-500"><i class="bi bi-geo-alt"></i> {{i.seller.address.district.district}}</p>
+        </div>
+    </div>
+</div>

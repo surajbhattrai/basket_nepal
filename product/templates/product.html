@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+{% block meta %}
+<title>{{product.title}} | Price & Detail of {{product.title}} in Nepal. | Basketnepal</title>
+<meta name="og:description" content="Buy {{product.title}} | {{product.title}} price in Nepal" />
+<meta name="keywords"
+    content="{{product.title}} , Price of {{product.title}} in nepal ,Price of {{product.title}} in Kathamndu , Buy {{product.title}} in nepal , Buy {{product.title}} in kathandu , Cheapest {{product.title}}" />
+
+<meta name="og:url" content="https://basketnepal.com{{request.get_full_path}}" />
+<meta name="og:title" content="{{product.title}} | Price & Detail of {{product.title}} in Nepal." />
+<meta name="og:type" content="product" />
+<meta property="og:description" content="Buy {{product.title}} | {{product.title}} price in Nepal" />
+<meta name="og:image" content="{{product.img.url}}" />
+<meta property="product:price:amount" content="{{product.price}}" />
+<meta property="product:price:currency" content="NPR" />
+<meta property="product:brand" content="{{product.brand}}" />
+<meta property="product:availability" content="in stock" />
+<meta property="product:condition" content="new" />
+
+{% endblock %}
+
+
+
+{% block content %}
+<div class="content-space-1 border-top bg-light">
+    <div class="container">
+
+        {% include 'message.html' %}
+
+        <div class="row">
+            <div class="col-md-9">
+                <div class="row gx-0 bg-white rounded shadow p-3">
+                    <div class="gx-5 col-md-6 col-12 ">
+                        <div>
+                            <div class="js-swiper-gallery-main swiper mb-2 border-bottom" style="max-height: 500px;">
+                                <div class="swiper-wrapper ">
+                                    <div class="swiper-slide">
+                                        <img class="w-100" style="height: 500px; object-fit: contain;"
+                                            src="{{product.img.url}}" alt="Image of {{product.title}}">
+                                    </div>
+
+                                    {% if product.img_second %}
+                                    <div class="swiper-slide">
+                                        <img class="w-100" style="height: 500px; object-fit: contain;"
+                                            src="{{product.img_second.url}}" alt="Image of {{product.title}}">
+                                    </div>
+                                    {% endif %}
+
+                                    {% if product.img_third %}
+                                    <div class="swiper-slide ">
+                                        <img class="w-100" style="height: 500px;object-fit: contain; "
+                                            src="{{product.img_third.url}}" alt="Image of {{product.title}}">
+                                    </div>
+                                    {% endif %}
+
+                                    {% if product.img_forth %}
+                                    <div class="swiper-slide">
+                                        <img class="w-100" style="height: 500px; object-fit: contain;"
+                                            src="{{product.img_forth.url}}" alt="Image of {{product.title}}">
+                                    </div>
+                                    {% endif %}
+
+                                    {% if product.img_fifth %}
+                                    <div class="swiper-slide">
+                                        <img class="w-100" style="height: 500px; object-fit: contain;"
+                                            src="{{product.img_fifth.url}}" alt="Image of {{product.title}}">
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="js-swiper-gallery-button-next swiper-button-next"></div>
+                                <div class="js-swiper-gallery-button-prev swiper-button-prev"></div>
+                            </div>
+
+                            <div class="js-swiper-gallery-thumbs swiper">
+                                <div class="swiper-wrapper text-center">
+                                    <div class="swiper-slide">
+                                        <img class="avatar avatar-lg" src="{{product.img.url}}"
+                                            alt="Image of {{product.title}}">
+                                    </div>
+
+                                    {% if product.img_second %}
+                                    <div class="swiper-slide">
+                                        <img class="avatar avatar-lg" src="{{product.img_second.url}}"
+                                            alt="Image of {{product.title}}">
+                                    </div>
+                                    {% endif %}
+
+                                    {% if product.img_third %}
+                                    <div class="swiper-slide">
+                                        <img class="avatar avatar-lg" src="{{product.img_third.url}}"
+                                            alt="Image of {{product.title}}">
+                                    </div>
+                                    {% endif %}
+
+                                    {% if product.img_forth %}
+                                    <div class="swiper-slide">
+                                        <img class="avatar avatar-lg" src="{{product.img_forth.url}}"
+                                            alt="Image of {{product.title}}">
+                                    </div>
+                                    {% endif %}
+
+                                    {% if product.img_fifth %}
+                                    <div class="swiper-slide">
+                                        <img class="avatar avatar-lg" src="{{product.img_fifth.url}}"
+                                            alt="Image of {{product.title}}">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gx-5 col-md-6 col-12">
+                        <div class="py-5">
+                            <h1 class="mb-3 fs-3 lh-base text-brown">{{product.title}}</h1>
+
+                            {% if product.price and product.price > 0 %}
+                            <h2 class="fs-2 text-brown">Rs. {{product.price}}</h2>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="card card-bordered shadow-none mb-5">
+                            <div class="card-body p-3">
+
+                                <form method="POST" action="{% url 'send_product_message' slug=product.slug %}">
+                                    {% csrf_token %}
+
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar avatar-circle avatar-soft-secondary">
+                                            {{product.seller.user.profile_picture}}
+                                        </div>
+
+                                        <div>
+                                            <p class="text-dark f-14 fw-500 my-0">{{product.seller.user.get_full_name}}
+                                            </p>
+                                            <p class="fw-500 f-13 my-0">{{product.seller.position}} at
+                                                {{product.seller.title}}</p>
+                                        </div>
+                                    </div>
+
+                                    <p class="my-3 fw-500 f-15">Send message to seller for more information.</p>
+
+                                    <div class="mb-2">
+                                        <label class="form-label visually-hidden">Message</label>
+
+                                        <textarea name="text" class="form-control f-15"
+                                            rows="3">Hi, I'm interested in '{{product.title}}'.{% if user.is_authenticated %}You can reach me at {{user.phone}}.{% endif %}</textarea>
+                                    </div>
+
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-soft-info fw-600">Send Message</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded shadow p-3 my-5">
+                    <div class="js-nav-scroller hs-nav-scroller-horizontal">
+                        <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+                            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                                <i class="bi-chevron-left"></i>
+                            </a>
+                        </span>
+
+                        <span class="hs-nav-scroller-arrow-next" style="display: none;">
+                            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                                <i class="bi-chevron-right"></i>
+                            </a>
+                        </span>
+
+                        <ul class="nav nav-segment nav-fill mb-7" id="propertyOverviewNavTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" href="#details" id="details-tab" data-bs-toggle="tab"
+                                    data-bs-target="#details" role="tab" style="min-width: 7rem;">Product Details</a>
+                            </li>
+
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" href="#specification" id="specification-tab" data-bs-toggle="tab"
+                                    data-bs-target="#specification" role="tab"
+                                    style="min-width: 7rem;">Specification</a>
+                            </li>
+
+                            {% if product.video %}
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" href="#video" id="video-tab" data-bs-toggle="tab"
+                                    data-bs-target="#video" role="tab" style="min-width: 7rem;">Product Video</a>
+                            </li>
+                            {% endif %}
+
+                        </ul>
+                    </div>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="details" role="tabpanel">
+                            <div class="">
+                                <ul class="f-15 pl-3 list-unstyled">
+
+                                    {% if product.hightlight_one %}
+                                    <li class="mb-1"><span class="text-success me-2"><i
+                                                class="far fa-check-circle"></i></span>
+                                        {{product.hightlight_one}}</li>
+                                    {% endif %}
+
+                                    {% if product.hightlight_two %}
+                                    <li class="mb-1"><span class="text-success me-2"><i
+                                                class="far fa-check-circle"></i></span>
+                                        {{product.hightlight_two}}</li>
+                                    {% endif %}
+
+                                    {% if product.hightlight_three %}
+                                    <li class="mb-1"><span class="text-success me-2"><i
+                                                class="far fa-check-circle"></i></span>
+                                        {{product.hightlight_three}}</li>
+                                    {% endif %}
+
+                                    {% if product.hightlight_four %}
+                                    <li class="mb-1"><span class="text-success me-2"><i
+                                                class="far fa-check-circle"></i></span>
+                                        {{product.hightlight_four}}</li>
+                                    {% endif %}
+
+                                    {% if product.hightlight_five %}
+                                    <li class="mb-1"><span class="text-success me-2"><i
+                                                class="far fa-check-circle"></i></span>
+                                        {{product.hightlight_five}}</li>
+                                    {% endif %}
+
+                                    {% if product.hightlight_six %}
+                                    <li class="mb-1"><span class="text-success me-2"><i
+                                                class="far fa-check-circle"></i></span>
+                                        {{product.hightlight_six}}</li>
+                                    {% endif %}
+
+                                    {% if product.hightlight_seven %}
+                                    <li class="mb-1"><span class="text-success me-2"><i
+                                                class="far fa-check-circle"></i></span>
+                                        {{product.hightlight_seven}}</li>
+                                    {% endif %}
+
+                                    {% if product.hightlight_eight %}
+                                    <li class="mb-1"><span class="text-success me-2"><i
+                                                class="far fa-check-circle"></i></span>
+                                        {{product.hightlight_eight}}</li>
+                                    {% endif %}
+
+                                    {% if product.hightlight_nine %}
+                                    <li class="mb-1"><span class="text-success me-2"><i
+                                                class="far fa-check-circle"></i></span>
+                                        {{product.hightlight_nine}}</li>
+                                    {% endif %}
+
+                                    {% if product.hightlight_ten %}
+                                    <li class="mb-1"><span class="text-success me-2"><i
+                                                class="far fa-check-circle"></i></span>
+                                        {{product.hightlight_ten}}</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {% if product.brand %}
+                            <h4 class="pb-1 mx-4">Brand : {{product.brand}}</h4>
+                            {% endif %}
+
+                            {{product.description|safe}}
+
+                        </div>
+
+                        <div class="tab-pane fade" id="specification" role="tabpanel">
+                            {{product.specification|safe}}
+                        </div>
+
+                        {% if product.video %}
+                        <div class="tab-pane fade" id="video" role="tabpanel">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item"
+                                    src="https://www.youtube.com/embed/{{product.get_video_id}}"
+                                    allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                <div class="mb-5 bg-white rounded shadow p-3">
+                    <h3 class="fs-2 fw-700 mb-5">Similar Products</h3>
+
+                    <div class="row row-cols-sm-2 row-cols-md-5 row-cols-lg-3">
+                        {% for i in related_product %}
+                        {% include 'snippets/product_card.html' %}
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card ms-md-5 ms-0 sticky-top" style="top:20px;">
+                    <div class="p-3 text-center rounded">
+                        <img class="avatar avatar-circle avatar-xl" src="{{product.seller.get_store_image}}"
+                            alt="Logo of {{product.seller.title}}">
+                        <div class="mt-3">
+                            <a href="{{product.seller.get_absolute_url}}"
+                                class="text-body fw-500 f-20 text-dark">{{product.seller.title}}</a>
+                            <p class="small mb-0"><i class="bi-geo-alt nav-icon"></i>
+                                {{product.seller.address.district.district}}
+                                {% if product.seller.address.city %}
+                                , {{product.seller.address.city}}
+                                {% endif %}
+                            </p>
+
+                            <div class="my-3 fw-500">
+                                {% if product.seller.mobile %}
+                                <span class="d-block text-body mb-1"><i class="bi-phone"></i>
+                                    {{product.seller.mobile}}</span>
+                                {% endif %}
+
+                                {% if product.seller.telephone %}
+                                <span class="d-block text-body"> <i class="bi-telephone"></i>
+                                    {{product.seller.telephone}}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <a href="tel:{{product.seller.mobile}}" class="btn btn-sm btn-danger px-5">Call Now !</a>
+
+                        <ul class="list-inline mt-3 mb-0">
+                            <li class="list-inline-item">
+                                <a class="btn btn-primary btn-xs btn-icon"
+                                    href="{{product.seller.socialcontact.facebook}}">
+                                    <i class="bi-facebook"></i>
+                                </a>
+                            </li>
+
+                            <li class="list-inline-item">
+                                <a class="btn btn-dark btn-xs btn-icon"
+                                    href="{{product.seller.socialcontact.facebook}}">
+                                    <i class="bi-instagram"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

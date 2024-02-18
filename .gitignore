@@ -1,0 +1,34 @@
+.DS_STORE
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+__pycache__/
+
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+
+# Virtualenv related
+bin/
+include/
+pip-selfcheck.json
+
+# Django related
+basket/settings/development.py
+
+media/
+staticfiles/
+
+db.sqlite3
+code.py
+seller_review.html
+
+
+
+
+
+
+
+
+
+

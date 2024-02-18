@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load templatehelpers %}
+
+{% block header %}{% endblock header %}
+{% load mptt_tags %}
+
+
+{% block meta %}
+<title> {{seller.title}} | Stores Near by {{seller.address.district.district}} - basketnepal.com </title>
+<meta property="og:title"
+  content="{{seller.title}} | Stores Near by {{seller.address.district.district}} - basketnepal.com" />
+
+<meta name="description" property="og:description" content="Shop online at {{seller.title}} with Basketnepal">
+<meta property="og:description"
+  content="Shop online at {{seller.title}} with Basketnepal | Stores Near by {{seller.address.district.district}}" />
+
+<meta name="keywords"
+  content="basket nepal, basketnepal , {{seller.title}} ,  {% for i in seller.seller_type.all %}{{i.name}} near {{seller.address.district.district}} , {% endfor %}" />
+
+<meta property="og:url" content="https://www.basketnepal.com/" />
+<meta property="og:type" content="company">
+<meta property="og:image" content="{{seller.get_store_image}}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="bg-light">
+
+  {% include 'seller_site_header.html' %}
+
+  <div class="container">
+    {% include 'message.html' %}
+  </div>
+
+
+  <main class="min-vh-100 container pb-5">
+
+    <div class="row">
+      <div class="col-md-8 col-12">
+
+        <div class="">
+          <div class="js-swiper-navigation swiper rounded">
+            <div class="swiper-wrapper">
+
+              {% if seller.banner %}
+              <div class="swiper-slide">
+                <img class="w-100 banner-sm" src="{{seller.banner.url}}" style="height: 27rem;object-fit: cover;"
+                  alt="Image Description">
+              </div>
+              {% endif %}
+              
+              {% for i in gallery %}
+              <div class="swiper-slide">
+                <img class="w-100 banner-sm" src="{{i.image.url}}" style="height: 25rem; object-fit: cover;"
+                  alt="Image Description">
+              </div>
+              {% endfor %}
+
+            </div>
+            <div class="js-swiper-navigation-button-next swiper-button-next icon icon-sm"></div>
+            <div class="js-swiper-navigation-button-prev swiper-button-prev icon icon-sm"></div>
+          </div>
+        </div>
+
+        {% if deals  %}
+        <div class="my-4">
+
+          <div class="bg-white rounded-top p-3 border-bottom mb-3">
+            <h3 class="fw-700 mb-0">Available deals</h3>
+          </div>
+
+          <div class="d-grid gap-5">
+            {% for i in deals %}
+            <div class="card shadow-none">
+              <div class="row">
+                <div class="col-md-3">
+                    <img class="card-img" style="height: 10rem; object-fit: cover;" src="{{i.image.url}}">
+                </div>
+  
+                <div class="col-md-9">
+                  <div class="card-body px-3 pt-2">
+                    <h3 class="card-title">{{i.title}}</h3>
+                    <p class="card-text">{{i.content|safe|truncatewords:50}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+
+        {% for i in front_page %}
+        <div class="card my-4 shadow-none">
+          <div class="card-header py-3 border-bottom">
+            <h3 class="pb-0 mb-0 fw-700">{{i.title}}</h3>
+          </div>
+
+          <div class="card-body pb-2">
+            {{i.content|safe}}
+          </div>
+
+        </div>
+        {% endfor %}
+
+
+
+
+        <div class="card my-4 shadow-none">
+
+          <div class="card-header py-3 border-bottom">
+            <h3 class="pb-0 mb-0 fw-700">Explore Products and Services of {{seller.title}}</h3>
+          </div>
+
+          <div class="card-body">
+            <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-3 mb-3">
+              {% for i in product %}
+              {% include 'snippets/product_card.html' %}
+              {% endfor %}
+            </div>
+
+            <nav class="mt-4">
+              {% if product.has_other_pages %}
+              <ul class="pagination justify-content-center">
+                {% if product.has_previous %}
+                <li class="page-item"><a class="page-link"
+                    href="{% relative_url product.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link">Previous</a></li>
+                {% endif %}
+                {% for i in product.paginator.page_range %}
+                {% if product.number == i %}
+                <li class="page-item active"><a class="page-link">{{ i }} <a class="sr-only">(current)</a>
+                </li>
+                {% elif i > product.number|add:'-5' and i < product.number|add:'5' %} <li class="page-item"><a
+                    class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}">{{ i }}</a>
+                  </li>
+                  {% endif %}
+                  {% endfor %}
+                  {% if product.has_next %}
+                  <li class="page-item"><a class="page-link"
+                      href="{% relative_url product.next_page_number 'page' request.GET.urlencode %}">Next</a>
+                  </li>
+                  {% else %}
+                  <li class="disabled page-item"><a class="page-link">Next</a></li>
+                  {% endif %}
+              </ul>
+              {% endif %}
+            </nav>
+          </div>
+
+        </div>
+
+
+
+      </div>
+
+      <div class="col-md-4 col-12">
+
+        <ul class="list-group fw-500 sticky-top">
+
+          <li class="list-group-item d-flex align-items-center">
+            <div>
+              <div class="text-info fw-700 f-17">{{seller.position}}</div>
+              {{seller.user.get_full_name}}
+            </div>
+            <span class="ms-auto"><i class="bi bi-person icon-bold fs-3"></i></span>
+          </li>
+
+          {% if seller.business_email %}
+          <li class="list-group-item d-flex align-items-center">
+            <div>
+              <div class="text-info fw-700 f-17">Email</div>
+              {{seller.business_email}}
+            </div>
+            <span class="ms-auto"><i class="bi bi-envelope icon-bold fs-3"></i></span>
+          </li>
+          {% endif %}
+
+          {% if seller.mobile %}
+          <li class="list-group-item d-flex align-items-center ">
+            <div>
+              <div class="text-info fw-700 f-17">Mobile</div>
+              {{seller.mobile}}
+            </div>
+            <span class="ms-auto"><i class="bi bi-phone icon-bold fs-3"></i></span>
+          </li>
+          {% endif %}
+
+          {% if seller.telephone %}
+          <li class="list-group-item d-flex align-items-center ">
+            <div>
+              <div class="text-info fw-700 f-17">Telephone</div>
+              {{seller.telephone}}
+            </div>
+            <span class="ms-auto"><i class="bi bi-telephone icon-bold fs-3"></i></span>
+          </li>
+          {% endif %}
+
+          <li class="list-group-item d-flex align-items-center ">
+            <div>
+              <div class="text-info fw-700 f-17">Location</div>
+              {{seller.address.city}}, {{seller.address.district}}
+            </div>
+
+            <span class="ms-auto"><i class="bi bi-geo-alt icon-bold fs-3"></i></span>
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.0.3/swiper-bundle.min.js"
+  integrity="sha512-+1MtN0rwSlEnZo0agG99mCQChlBtfe8hyHItwWtgiD33mWvaNVZkZB9yX2S92z5HgDg1+EcitjutZejbHUcZAg=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+{% endblock content %}

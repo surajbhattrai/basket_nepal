@@ -1,0 +1,56 @@
+{% load static %}
+
+<header id="header" class="navbar navbar-expand-lg navbar-end navbar-light border-bottom d-none d-md-block">
+
+  <div class="container">
+    <nav class="navbar-nav-wrap">
+
+      <a class="navbar-brand" href="{% url 'home' %}">
+        <img class="" src="{% static 'images/logo/logo_icon.png' %}" alt="Basketnepal Logo" height=45>
+        <span class="fw-600 text-dark f-20">Basketnepal</span>
+      </a>
+
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-default">
+          <i class="bi-list"></i>
+        </span>
+        <span class="navbar-toggler-toggled">
+          <i class="bi-x"></i>
+        </span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+
+          <li class="nav-item">
+            <a class="nav-link fw-500" href="{% url 'dashboard' %}">Dashboard</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link fw-500" href="{% url 'request_list' %}?view=seller"> Requests </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link fw-500" href="{% url 'allproducts' %}">Products </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{% url 'message_list' %}?view=seller" class="nav-link fw-500">Messages</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link text-danger fw-500" href="{% url 'home' %}">Switch to Buying </a>
+          </li>
+
+          <a href="{% url 'update_seller' slug=user.seller.slug %}">
+            <img class="avatar avatar-circle avatar-sm" src="{{user.seller.get_store_image}}" alt="Logo of {{seller.title}}"> 
+          </a>
+
+        </ul>
+      </div>
+
+    </nav>
+  </div>
+</header>

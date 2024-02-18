@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+
+{% url 'update_seller' slug=seller.slug as update_seller_url %}
+{% url 'seller_pages' as seller_pages_url %}
+
+{% url 'add_new_pages' as add_new_pages_url %}
+{% url 'update_page' pk=sellerpages.id as update_page_url %}
+
+{% url 'gallery_list' as gallery_list_url %}
+{% url 'add_gallery_image' as add_gallery_image_url %}
+
+{% url 'social' as social_url %}
+{% url 'update_s_address' as update_s_address_url %}
+{% url 'dashboard' as dashboard_url %}
+
+
+<div class="container content-space-1">
+    <div class="row">
+
+        <div class="col-md-4 col-lg-3 mb-7 mb-md-0">
+            <div class="card border shadow-none flex-grow-1 mb-5">
+                <div class="card-body">
+                    <div class="d-none d-lg-block text-center mb-5">
+                        <img class="avatar avatar-xxl avatar-circle mb-3" src="{{user.seller.get_store_image}}">
+                        <h4 class="card-title mb-0">{{user.seller.title}}</h4>
+                        <a href="{{user.seller.get_absolute_url}}" class="f-13 pt-3 fw-semi-bold">Visit your store</a>
+                    </div>
+
+                    <span class="text-cap">Account</span>
+
+                    <ul class="nav nav-sm nav-tabs nav-vertical mb-4">
+
+                        <li class="nav-item">
+                            <a class="nav-link {% if dashboard_url == request.path %} active {% endif %}"
+                                href="{% url 'dashboard' %}">
+                                <i class="bi-sliders nav-icon"></i>Dashboard
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link {% if update_seller_url == request.path %} active {% endif %}"
+                                href="{% url 'update_seller' slug=user.seller.slug %}">
+                                <i class="bi-gear nav-icon"></i>General Setting
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link {% if seller_pages_url == request.path or add_new_pages_url == request.path  %} active {% endif %}"
+                                href="{% url 'seller_pages' %}">
+                                <i class="bi-file-earmark nav-icon"></i>Pages
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link {% if gallery_list_url == request.path or add_new_pages_url == request.path  %} active {% endif %}"
+                                href="{% url 'gallery_list' %}">
+                                <i class="bi-image nav-icon"></i>Gallery
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link {% if update_s_address_url == request.path  %} active {% endif %}"
+                                href="{% url 'update_s_address' %}">
+                                <i class="bi-geo-alt nav-icon"></i>Store Address
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link {% if social_url == request.path  %} active {% endif %}"
+                                href="{% url 'social' %}">
+                                <i class="bi-facebook nav-icon"></i>Social Contacts
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-lg-9">
+
+            <div class="container">
+                {% include 'message.html' %}
+            </div>
+
+
+            <!-- Dashboard -->
+            {% if dashboard_url == request.path %}
+            <div class="container">
+
+                <div class="card card-body border shadow-none mb-5">
+
+                    <h2 class="mb-0">Welcome to BasketNepal</h2>
+                    <p>We have assembled some quick links for you.</p>
+                    <div class="row mt-2">
+                        <div class="col-md-6 col-12 ">
+                            <h3 class="font-weight-semi-bold mb-3">Get Started</h3>
+                            <a href="{% url 'addproduct' %}" class="btn btn-primary px-5">Add new product</a>
+                            <p class="mt-1 mb-0">or <a href="{% url 'allproducts' %}">manage your products.</a></p>
+                        </div>
+
+                        <div class="col-md-6 col-12 mt-md-0 mt-3">
+                            <h3 class="font-weight-semi-bold mb-3">Manage store</h3>
+                            <a class="fw-500" href="{% url 'update_seller' slug=user.seller.slug %}">Add store logo</a>
+                            <p class="mt-2"><a class="fw-500" href="{% url 'update_seller' slug=user.seller.slug %}">
+                                    Add store bio</a></p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <h3>Popular Products</h3>
+
+                <div class="row">
+                    {% for product in products %}
+                    <div class="col-md-3 col-6 mt-3">
+                        <div class="card border shadow-none mb-4">
+                            <div class="card-img-top text-center">
+                                <img src="{{product.img.url}}" class="img-fluid"
+                                    style="height:200px; object-fit: cover;">
+                            </div>
+                            <div class="p-3 border-top">
+                                <a href="{{product.get_absolute_url}}"
+                                    class="text-dark fs-6 stretched-link">{{product.title|truncatechars:80}}</a>
+                                {% if product.price and product.price > 0 %}
+                                <h3 class="fw-semi-bold pt-2">Rs. {{product.price}}</h3>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+            {% endif %}
+
+
+            <!-- Update Seller -->
+            {% if update_seller_url == request.path %}
+            <div class="container">
+                <div class="card shadow-none card-bordered mb-4 border">
+                    <div class="card-header border-bottom">
+                        <h4 class="card-header-title">General Setting</h4>
+                    </div>
+                    <form class="card-body row" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="align-items-center">
+
+                            <label for="logo">
+                                <img id="logo" class="avatar-img avatar-circle avatar avatar-xl"
+                                    src="{{seller.get_store_image}}">
+                            </label>
+
+                            <div class="d-grid d-sm-flex">
+                                <div class="form-attachment-btn btn text-primary fw-semi-bold f-15 px-0">Update Logo
+                                    <input name="logo" type="file" class="js-file-attach form-attachment-btn-label"
+                                        onchange="document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group my-4 col-md-8">
+                            <label class="form-label">Store Name</label>
+                            <input type="text" name="title" class="form form-control" value="{{user.seller.title}}"
+                                readonly="readonly" />
+                        </div>
+
+                        <div class="form-group my-4 col-md-4">
+                            <label class="form-label">PAN/VAT No.</label>
+                            <input type="text" name="registration_no" class="form form-control"
+                                value="{{user.seller.registration_no}}" readonly="readonly" />
+                        </div>
+
+                        <div class="form-group my-4 col-md-8">
+                            <label for="id_position" class="form-label">Position/Degination:</label>
+                            <input type="text" name="position" class="form form-control" maxlength="100" required=""
+                                id="id_position" value={{user.seller.position}}>
+                        </div>
+
+                        <div class="align-items-center my-3">
+
+                            <label class="avatar avatar-xl" for="id_banner">
+                                <img id="banner" class="avatar-img"
+                                    src="{% if user.seller.banner %}{{user.seller.banner.url}}{% else %}{% static '/images/placeholder/banner.jpg' %}{% endif %}">
+                            </label>
+
+                            <div class="d-grid d-sm-flex mt-2">
+                                <div class="form-attachment-btn btn text-primary fw-semi-bold f-15 px-0">Change Banner
+                                    Image
+                                    <input id="id_banner" name="banner" type="file"
+                                        class="js-file-attach form-attachment-btn-label"
+                                        onchange="document.getElementById('banner').src = window.URL.createObjectURL(this.files[0])">
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4 col-md-6">
+                            <label class="form-label">Mobile Number</label>
+                            {{form.mobile|as_crispy_field}}
+                        </div>
+
+                        <div class="form-group mb-4 col-md-6">
+                            <label class="form-label">Telephone Number</label>
+                            {{form.telephone|as_crispy_field}}
+                        </div>
+
+                        <div class="form-group mb-4 col-md-12">
+                            <label class="form-label">Bio</label>
+                            {{form.bio|as_crispy_field}}
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
+                                Update Settings
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+
+            <!-- Pages Seller -->
+            {% if seller_pages_url == request.path %}
+            <div class="container">
+                <a href="{% url 'add_new_pages' %}" class="btn btn-primary">Add new page</a>
+
+                {% for i in object_list %}
+                <a class="card card-bordered shadow-none mt-5" href="{% url 'update_page' i.id %}">
+                    <div class="card-body">
+                        <h3 class="card-title">{{i.title}}</h3>
+                        <p class="card-text text-body">{{i.content|safe|truncatechars:200}}</p>
+                        <button class="btn btn-primary btn-sm">Edit Page</button>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+
+            <!-- All forms -->
+            {% if update_s_address_url == request.path or social_url == request.path or add_new_pages_url == request.path or update_page_url == request.path or add_gallery_image_url == request.path %}
+            <div class="container">
+                <div class="card card-bordered card-body shadow-none">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{form.media}}
+                        {{form.as_p}}
+                        <button type="submit" class="btn btn-primary">
+                            Submit
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+
+            <!-- Gallary -->
+            {% if gallery_list_url == request.path %}
+
+            <div class="container">
+                <a href="{% url 'add_gallery_image' %}" class="btn btn-primary mb-5">Add new image to gallary</a>
+
+
+
+                <div class="row row-cols-1 row-cols-sm-2 1 row-cols-md-3 row-cols-lg-4 mb-5">
+                    {% for i in object_list %}
+
+                    <div class="col mb-3 mb-sm-4">
+                        <div class="card card-bordered mb-3">
+                            <div class="card-pinned">
+                                <img class="card-img" style="height: 15rem; object-fit: cover;" src="{{i.image.url}}" alt="Image of {{i.name}}">
+
+                                <div class="card-pinned-bottom-end">
+                                    <a href="{% url 'remove_gallery_image' id=i.id %}" class="bg-danger rounded-pill badge">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+            {% endif %}
+
+
+
+
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}

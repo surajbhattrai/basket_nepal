@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load templatehelpers %}
+
+
+{% block content %}
+
+
+ 
+<div class="row mt-5">
+
+    <div class="container">
+        <h3>What are you looking for ?</h3>
+        {% if request.GET.list %}
+        <a href="?show=product&q={{request.GET.q}}" class="btn btn-light rounded-pill btn-sm mr-3 mb-3">View all
+            results</a>
+        {% endif %}
+
+        {% for cat in categories %}
+        {% with params=request.GET.urlencode %}
+
+        <a href="{% relative_url cat.slug 'list' params %}"
+            class="btn btn-light rounded-pill btn-sm mr-3 mb-3 {% if request.GET.list == cat.slug %} btn-light-success text-dark-success {% endif %}">
+            {{cat.name}} <i
+                class="{% if request.GET.list == cat.slug %} fe fe-check text-success {% else %} fe fe-plus text-muted {% endif %} ml-1 font-weight-bold"></i>
+        </a>
+
+        {% endwith %}
+        {% endfor %}
+
+    </div>
+
+    {% for product in products %}
+    <div class="col-md-3 col-6 mt-3">
+        <div class="card mb-4 card-hover">
+            <div class="card-img-top text-center">
+                <img src="{{product.img.url}}" class="img-4by3-xxl" height="200" style="object-fit: contain;">
+            </div>
+            <div class="p-3 bg-light">
+                <a href="{{product.get_absolute_url}}"
+                    class="text-dark stretched-link font-size-sm">{{product.title|truncatechars:80}}</a>
+                    
+                {% comment %} <h4 class="my-1 mb-0">Rs. {{product.price}}</h4> {% endcomment %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+<nav class="mt-4">
+    {% if products.has_other_pages %}
+    <ul class="pagination justify-content-center">
+        {% if products.has_previous %}
+        <li class="page-item"><a class="page-link"
+                href="{% relative_url products.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><a class="page-link">Previous</a></li>
+        {% endif %}
+        {% for i in products.paginator.page_range %}
+        {% if products.number == i %}
+        <li class="page-item active"><a class="page-link">{{ i }} <a class="sr-only">(current)</a>
+        </li>
+        {% elif i > products.number|add:'-5' and i < products.number|add:'5' %} <li class="page-item"><a
+                class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}">{{ i }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            {% if products.has_next %}
+            <li class="page-item"><a class="page-link"
+                    href="{% relative_url products.next_page_number 'page' request.GET.urlencode %}">Next</a>
+            </li>
+            {% else %}
+            <li class="disabled page-item"><a class="page-link">Next</a></li>
+            {% endif %}
+    </ul>
+    {% endif %}
+</nav>
+
+ 
+
+{% endblock content %}
+

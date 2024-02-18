@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load templatehelpers %}
+
+{% block content %}
+
+{% url 'request_detail' request_item.id as request_detail_url %}
+{% url 'request_list' as request_list_url %}
+
+
+
+<div class="gradient-x-three-sm-primary pb-5">
+    <div class="container content-space-2 w-100 w-md-75 px-5 px-md-10">
+            
+        <form method="get" action="">
+            <div class="input-card input-card-sm mb-3">
+                <div class="input-card-form">
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-prepend input-group-text">
+                            <i class="bi-search"></i>
+                        </span>
+                        <input name="search" value="{{request.GET.search}}" type="text" class="form-control" placeholder="Search ...">
+                    </div>
+                </div>
+
+                <div class="input-card-form">
+
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-prepend input-group-text">
+                            <i class="bi-geo-alt"></i>
+                        </span>
+
+                        <select name="location" class="form-select form-select-sm text-muted f-16">
+                            {% if request.GET.location %}
+                            <option>{{request.GET.location}}</option>
+                            {% endif %}
+
+                            <option value="{% relative_url '' 'location' params %}">Entire Nepal</option>
+
+                            {% for i in districts %}
+                            <option value="{{ i.district }}">{{i.district}}</option>
+                            {% endfor %}
+
+                            <!-- {% for i in districts %}
+                            {% with params=request.GET.urlencode %}
+                            <option value="{% relative_url i.district 'location' params %}">{{i.district}}</option>
+                            {% endwith %}
+                            {% endfor %} -->
+                        </select>
+
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-soft-info fw-500 px-5">Search</button>
+            </div>
+        </form>
+
+        <!-- <div class="row align-items-center">
+            <div class="col-md-auto mb-3 mb-lg-0">
+                <h6 class="mb-1">Limit search to:</h6>
+            </div>
+
+            <div class="col-md mb-3 mb-lg-0">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="jobSearchToCheckbox1" value="option1" checked>
+                    <label class="form-check-label" for="jobSearchToCheckbox1">Job title</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="jobSearchToCheckbox2" value="option2">
+                    <label class="form-check-label" for="jobSearchToCheckbox2">Skills</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="jobSearchToCheckbox3" value="option3">
+                    <label class="form-check-label" for="jobSearchToCheckbox3">Companies</label>
+                </div>
+                
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="jobSearchToCheckbox4" value="option4">
+                    <label class="form-check-label" for="jobSearchToCheckbox4">Field of study</label>
+                </div>
+            </div>
+
+            <div class="col-md-auto">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="remoteOnlySwitch">
+                    <label class="form-check-label" for="remoteOnlySwitch">Remote only</label>
+                </div>
+            </div>
+        </div> -->
+    
+    </div>
+
+
+    <div class="container w-100 w-md-75 px-2 px-md-10">
+
+          {% if request.user.is_authenticated and not user.seller.basketnepal_pro %}
+          <div class="alert alert-soft-danger text-center card-alert" role="alert">
+            Please Upgrade your account to chat and view customer's contact number.
+          </div>
+          {% endif %}
+
+            <div class="d-flex justify-content-between">
+
+                <!-- {% if request.user.is_authenticated %}
+                <div class="btn-group dropleft my-auto">
+                    <a type="button" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi-three-dots-vertical"></i></a>
+                    <div class="dropdown-menu border">
+                        <a class="dropdown-item fw-500" href="{% url 'request_list' %}?view=yours">Your Requests</a>
+                    </div>
+                </div>
+                {% endif %} -->
+
+
+            </div>
+
+            <ul class="list-unstyled">
+                {% for i in requests %}
+
+                <li class="my-5 p-5 rounded bg-white">
+
+                    <div class="d-flex gap-2 mb-2">
+                        <div class="avatar border avatar-circle me-2">
+                            {{i.user.profile_picture}}
+                        </div>
+
+                        <div class="my-auto">
+                            <p class="fw-600 text-dark f-15 p-0 m-0"> {{i.user.get_full_name}}</p>
+                            {% if i.user.seller.position %}
+                            <p class="text-body f-13 m-0">{{i.user.seller.position}} at
+                                {{i.user.seller.title}}</p>
+                            {% endif %}
+                            <p class="text-body f-13 m-0 fw-500"> <i
+                                    class="bi-geo-alt-fill me-1"></i>{{i.district.district}}</p>
+                        </div>
+
+                        {% if i.show_contact_info and request.user.is_authenticated and user.seller.basketnepal_pro %}
+                            <a class="btn btn-ghost-info fw-600 f-14 py-auto" href="tel:{{i.user.phone}}">
+                                <i class="bi-telephone-inbound-fill me-1"></i> {{i.user.phone}}
+                            </a>
+                        {% endif %}
+
+                    </div>
+
+                    <p class=" fw-600 text-black">
+                        {{i.product_name}}
+                    </p>
+
+                    {% if request_item.image %}
+                    <img src="{{request_item.image.url}}" class="rounded-2 img-fluid"
+                        alt="Basketnepal Customer Request">
+                    {% endif %}
+
+                    <p class="mb-0 text-muted py-1">
+                        {{i.content}}
+                    </p>
+
+                    <div class="d-flex justify-content-between mt-2 mb-5">
+                        <span class="badge bg-soft-info text-info me-2">
+                            <span class="legend-indicator bg-info"></span>{{i.get_purpose_display}}
+                        </span>
+
+                        <div class="text-muted f-13 fw-500">{{i.quantity}} quantity required. </div>
+
+                        <div class="text-danger f-12 fw-500"><i class="bi bi-stopwatch-fill f-13"></i>
+                            {{i.expiring_date|timeuntil}} left</div>
+
+                    </div>
+
+                    {% if request.user.is_authenticated and user.seller.basketnepal_pro  %}
+                    <form method="POST" action="{% url 'send_request_message' id=i.id %}">
+                        {% csrf_token %}
+                        <div class="input-card border border-primary">
+
+
+                            <div class="input-card-form d-flex gap-3">
+                                <i class="fab fa-facebook-messenger fs-1 text-primary my-auto"></i>
+
+                                <input name="text" type="text" class="form-control bg-transparent"
+                                    placeholder="Type your message..." required="">
+                            </div>
+
+                            <button type="submit" class="btn btn-link p-0 fw-600 text-primary my-auto me-3">Send
+                                Message</button>
+                        </div>
+                    </form>
+                    {% endif %}
+
+
+
+                </li>
+                {% endfor %}
+            </ul>
+
+    </div>
+</div>
+
+
+
+{% endblock content %}

@@ -1,0 +1,282 @@
+{% load static %}
+
+{% url 'home' as home_url %}
+
+{% url 'products_listview' slug=business.slug as products_listview_url %}
+{% url 'stores' slug=business_sector_obj.slug as stores_url %}
+
+{% url 'product_detail' slug=product.slug as product_detail_url %}
+
+{% url 'request_list' as request_list_url %}
+{% url 'request_detail' request_item.id as request_details_url %}
+{% url 'request' as request_url %}
+
+
+{% url 'message_list' as message_list_url %}
+{% url 'message_detail' conversation.id as message_detail_url %}
+
+
+{% url 'seller_profile' as seller_profile_url %}
+{% url 'customerinfo' as customerinfo_url %}
+{% url 'saved_products' as saved_products_url %}
+
+{% url 'dashboard' as dashboard_url %}
+
+
+{% if '/dashboard' in request.path or '/chat' in request.path or '/request' in request.path %}
+<header id="header" class="navbar navbar-expand-md bg-white border d-md-none py-0">
+
+    <div class="container">
+  
+      <div class="d-flex">
+  
+        {% if home_url == request.path %}
+        <a data-bs-toggle="offcanvas" href="#headercanvas"
+          class="avatar avatar-circle avatar-md border avatar-soft-secondary d-md-none m-2 border">
+          {% if request.user.is_authenticated %}
+          {{user.profile_picture}}
+          {% else %}
+          <span class="avatar-initials bi-list"></span>
+          {% endif %}
+        </a>
+        <p class="f-18 fw-600 text-dark d-md-none my-auto">Home</p>
+        {% else %}
+        <a class="text-dark fs-3 m-2" onclick="history.back()"><i class="bi bi-arrow-left-short display-5"></i></a>
+        {% endif %}
+  
+  
+        {% if stores_url == request.path %}
+        <p class="f-18 fw-600 d-md-none mx-3 my-auto text-highlight-light">
+          {{business_sector_obj}}
+        </p>
+        {% endif %}
+
+        {% if products_listview_url == request.path  %}
+        <p class="f-18 fw-600 d-md-none mx-3 my-auto text-highlight-light">
+          Products
+        </p>
+        {% endif %}
+  
+        {% if product_detail_url == request.path %}
+        <p class="f-18 fw-600 text-dark d-md-none my-auto">Product</p>
+        {% endif %}
+  
+        {% if request_url == request.path %}
+        <p class="f-18 fw-600 text-dark d-md-none my-auto">Post your request</p>
+        {% endif %}
+  
+        {% if customerinfo_url == request.path %}
+        <p class="f-18 fw-600 text-dark d-md-none my-auto">Account Information</p>
+        {% endif %}
+  
+        {% if request_list_url == request.path or request_details_url == request.path %}
+        <p class="f-18 fw-600 text-dark d-md-none my-auto">Customers Requests</p>
+        {% endif %}
+  
+        {% if message_list_url == request.path %}
+        <p class="f-18 fw-600 text-dark d-md-none my-auto">Messages</p>
+        {% endif %}
+  
+        {% if message_detail_url == request.path %}
+        <p class="f-18 fw-600 text-dark d-md-none my-auto">
+          {% if conversation.message_set.first.sender == user %}
+          <span class="d-block h5 text-dark mb-1">{{ conversation.message_set.first.receiver }}</span>
+          {% else %}
+          <span class="d-block h5 text-dark mb-1">{{ conversation.message_set.first.sender }}</span>
+          {% endif %}
+        </p>
+        {% endif %}
+  
+        {% if seller_profile_url == request.path %}
+        <p class="f-18 fw-600 text-dark d-md-none my-auto">Become a seller</p>
+        {% endif %}
+  
+        {% if saved_products_url == request.path %}
+        <p class="f-18 fw-600 text-dark d-md-none my-auto">Saved Products</p>
+        {% endif %}
+
+        {% if dashboard_url in request.path %}
+        <p class="f-18 fw-600 text-dark d-md-none my-auto">Seller Center</p>
+        {% endif %}
+  
+      </div>
+  
+      <div class="d-flex">
+        {% if request.user.is_authenticated %}
+          {% if user.seller %}
+           <a href="{% url 'allproducts' %}" class="fw-600 text-danger border-bottom border-danger border-2">
+           My Products
+          </a> 
+          {% endif %}
+        
+        {% else %}
+        <a class="text-danger nav-link fw-600 px-1 f-14" href="{% url 'user_login' %}">Log in</a>
+        <div class="nav-link px-0">|</div>
+        <a class="text-danger nav-link fw-600 px-1 f-14" href="{% url 'signup' %}">Signup</a>
+        {% endif %}
+      </div>
+  
+    </div>
+</header>
+
+{% else %}
+
+<nav class="text-center d-md-none">
+
+  <a href="{% url 'home' %}">
+    <img class="pt-2" src="{% static 'images/logo/logo_icon.png' %}" alt="Basketnepal Logo" height=45>
+    <p class="fw-600 text-dark f-16">Basketnepal</p>
+  </a>
+
+  <form method="get" action="{% url 'products_listview' %}" class="form-contol form-control-sm">
+    <div class="input-card border shadow-none rounded-pill py-0 border-dark">
+      <div class="input-card-form">
+        <input name="q" value="{{request.GET.q}}" type="text" class="form-control form-control-sm bg-transparent fw-500"
+          placeholder="Search for product , service ..">
+      </div>
+      <button type="submit" class="btn btn-sm py-0"><i class="bi bi-search text-primary fs-3"></i></button>
+    </div>
+  </form>
+
+  <div class="js-nav-scroller hs-nav-scroller-horizontal">
+
+    <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+      <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+        <i class="bi-chevron-left"></i>
+      </a>
+    </span>
+
+    <span class="hs-nav-scroller-arrow-next" style="display: none;">
+      <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+        <i class="bi-chevron-right"></i>
+      </a>
+    </span>
+
+
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a href="{% url 'products_listview' %}" class="nav-link fw-semi-bold">Products</a>
+      </li>
+
+      {% for i in all_sectors %}
+      <li class="nav-item">
+        <a href="{% url 'stores' i.slug %}" class="nav-link fw-semi-bold">{{i.name}}</a>
+      </li>
+      {% endfor %}
+
+    </ul>
+  </div>
+</nav>
+
+{% endif %}
+
+
+<nav class="fixed-bottom d-md-none bg-white text-center border">
+    <div class="row row-col row-cols-5">
+      <div class="col">
+        <a href="{{ home_url }}" class="btn btn-ghost-dark py-0">
+          <i class="bi-house{% if request.path == home_url %}-fill{% endif %} fs-3"></i>
+          <p class="fw-500 p-0 m-0 f-12">Home</p>
+        </a>
+      </div>
+  
+      <div class="col">
+        <a href="{{ request_list_url }}" class="btn btn-ghost-dark py-0">
+          <i
+            class="bi-menu-button-wide{% if request.path == request_list_url or request.path == request_details_url %}-fill{% endif %} fs-3"></i>
+            <p class="fw-500 p-0 m-0 f-12">Requests</p>
+        </a>
+      </div>
+
+      <div class="col ps-4">
+        <a href="{{ request_url }}" class="btn btn-ghost-dark">
+          <i class="bi-plus-square{% if request.path == request_url %}-fill{% endif %} fs-2"></i>
+        </a>
+      </div>
+  
+      <div class="col">
+        <a href="{{ message_list_url }}" class="btn btn-ghost-dark py-0 position-relative">
+          <i class="bi-chat{% if request.path == message_list_url or request.path == message_detail_url %}-fill{% endif %}  fs-3">
+            {% if unread_message %}
+            <span class="avatar-status avatar-sm-status avatar-status-danger top-0"></span>
+            {% endif %}
+          </i>
+          <p class="fw-500 p-0 m-0 f-12">Inbox</p>
+        </a>
+      </div>
+  
+      <div class="col">
+          <a type="button" class="text-dark btn btn-ghost-dark py-0" data-bs-toggle="offcanvas" href="#headercanvas">
+            <i class="bi bi-three-dots-vertical fs-3"></i>
+            <p class="fw-500 p-0 m-0 f-12">Menu</p>
+          </a>
+      </div>
+  
+    </div>
+</nav>
+
+
+<div class="offcanvas offcanvas-start h-100 w-75" tabindex="-1" id="headercanvas">
+  <div class="offcanvas-header px-4">
+    <h4 class="offcanvas-title" id="headercanvas">Account info</h4>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+
+  <div class="offcanvas-body px-4">
+
+    {% if request.user.is_authenticated %}
+
+    <div class="avatar avatar-circle avatar-md border avatar-soft-secondary">
+      {{user.profile_picture}}
+      <span class="avatar-status avatar-sm-status avatar-status-primary"></span>
+    </div>
+
+    <div class="my-2">
+      <a href="{% url 'customerinfo' %}" class="fw-600 text-dark f-17">Hi {{user.first_name}} !</a>
+    </div>
+
+    <hr>
+
+    {% endif %}
+
+    <ul class="navbar-nav f-18">
+
+      <a href="{% url 'home' %}" class="nav-link fw-500">Home</a>
+
+      <a href="{% url 'request' %}" class="nav-link fw-500">Post your Request</a>
+
+
+
+
+      {% if user.seller %}
+      <p class="text-uppercase f-14 fw-700 pt-3 border-top">Seller Setting</p>
+
+      <a class="nav-link fw-500" href="{% url 'dashboard' %}">Dashboard</a>
+      <a class="nav-link fw-500" href="{% url 'allproducts' %}">Products </a>
+      {% endif %}
+
+      <a href="{% url 'request_list' %}" class="nav-link fw-500">Customer's Request</a>
+      <a href="{% url 'message_list' %}" class="nav-link fw-500">Messages</a>
+
+      {% if not user.seller %}
+      <a href="{% url 'seller_profile' %}" class="nav-link fw-500">Become a Seller</a>
+      {% endif %}
+     
+
+      {% if request.user.is_authenticated %}  
+      <hr>
+      <a href="{% url 'saved_products' %}" class="nav-link fw-600"></i>Saved Products</a>
+      <a href="{% url 'customerinfo' %}" class="nav-link fw-600"></i>Account Information</a>
+      <a href="{% url 'user_logout' %}" class="nav-link fw-600 text-danger"></i>Log out</a>
+      {% else %}
+      <div class="d-flex">
+        <a class="text-danger nav-link fw-600" href="{% url 'user_login' %}">Log in</a>
+        <div class="nav-link px-0">|</div>
+        <a class="text-danger nav-link fw-600" href="{% url 'signup' %}">Signup</a>
+      </div>
+      {% endif %}
+
+
+    </ul>
+  </div>
+</div>

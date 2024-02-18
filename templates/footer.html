@@ -1,0 +1,12 @@
+{% load static %}
+
+<footer>
+    <div class="container">
+        <div class="text-center py-3 f-14 fw-500">
+            © 2022 Basketnepal
+            {% for p in site_page %}
+            | <a href="{{p.get_absolute_url}}" class="">{{p.name}}</a>
+            {% endfor %}
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+
+{% block content %}
+
+<style>
+  .custom-file-label {
+    display: none;
+  }
+</style>
+
+
+
+<div class="bg-light">
+
+  <div class="container pt-3">
+    <div class="row">
+
+      <div class="col-md-6 d-md-block d-none">
+        <div class="card card-body shdaow-0 border border-success rounded-lg bg-soft-success sticky-top"
+          style="top:25px;">
+
+          <div class="mb-4 mb-xl-0 text-center text-md-left">
+            <h2 class="mt-3">Welcome to Seller Center</h2>
+
+            <div class="w-lg-75 text-center mx-lg-auto mt-7">
+              <div class="row">
+
+                <div class="col-6 col-sm-4 mb-3 mb-sm-0">
+                  <div class="text-center">
+                    <span class="icon icon-light bg-white shadow-sm mb-3">
+                      <i class="bi-wifi"></i>
+                    </span>
+
+                    <h5 class="mb-1">Build online presence.</h5>
+                  </div>
+                </div>
+
+                <div class="col-6 col-sm-4 mb-3 mb-sm-0">
+                  <div class="text-center">
+                    <span class="icon icon-light bg-white shadow-sm mb-3">
+                      <i class="bi-people"></i>
+                    </span>
+                    <h5 class="mb-1">Increase customers.</h5>
+                  </div>
+                </div>
+
+                <div class="col-6 col-sm-4">
+                  <div class="text-center">
+                    <span class="icon icon-light bg-white shadow-sm mb-3">
+                      <i class="bi-shop"></i>
+                    </span>
+
+                    <h5 class="mb-1">Grow your business</h5>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="text-center">
+              <img src="{% static 'illustrations/submit_req.svg' %}" height="450">
+            </div>
+
+
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="px-md-20 pt-md-0 p-5">
+
+
+          <form method="POST" id="profileForm" data-url="{% url 'ajax_load_districts' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="row">
+
+              <div class="col-12">
+                <h3 class="my-3 font-weight-semi-bold">Store Information</h3>
+              </div>
+
+              <div class="my-3">
+
+                <label class="avatar avatar-xl avatar-circle" for="id_logo">
+                  <img id="logo" class="avatar-img" src="{% static 'images/placeholder/img1.jpg' %}">
+                </label> 
+
+                <div class="d-grid d-sm-flex">
+                  <div class="form-attachment-btn btn text-primary fw-semi-bold f-15 px-0">Update Logo
+                    <input name="logo" type="file" class="js-file-attach form-attachment-btn-label"
+                      onchange="document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-12 mb-2">
+                <label for="username" class="form-label">Contact Person Name</label>
+                <input class="form-control form-control-sm" type="text" value="{{user.get_full_name}}" readonly>
+              </div>
+
+              <div class="col-md-6 col-12">
+                <label class="form-label">Position / Desigination</label>
+                {{seller_form.position}}
+              </div>
+
+              <div class="col-md-12 mb-2">
+                <label for="username" class="form-label">Store Name / Display Name</label>
+                {{seller_form.title}}
+              </div>
+
+              <div class="col-md-6 col-12">
+                <label class="form-label">Mobile Number</label>
+                {{seller_form.mobile|as_crispy_field}}
+              </div>
+
+              <div class="col-md-6 col-12">
+                <label class="form-label">Telephone Number</label>
+                {{seller_form.telephone|as_crispy_field}}
+              </div>
+
+              <div class="col-12 mb-2">
+                <label class="form-label">Business Email</label>
+                {{seller_form.business_email}}
+              </div>
+
+              <div class="col-12 mb-2">
+                <label class="form-label">Business registration no. (PAN/VAT)</label>
+                {{seller_form.registration_no}}
+              </div>
+
+              <div class="col-12 mb-2">
+                <label class="form-label">Upload Business Document</label>
+                {{seller_form.business_document|as_crispy_field}}
+              </div>
+
+              <div class="col-12">
+                <h3 class="my-3 font-weight-semi-bold">Store Address</h3>
+              </div>
+
+              <div class="col-md-6 col-12 pb-2">
+                <label class="form-label">Building/Floor</label>
+                {{address_form.building}}
+              </div>
+
+              <div class="col-md-6 col-12 pb-2">
+                <label class="form-label">City</label>
+                {{address_form.city}}
+              </div>
+
+              <div class="col-md-6 col-12">
+                <label class="form-label">Province</label>
+                {{address_form.province}}
+              </div>
+
+              <div class="col-md-6 col-12">
+                <label class="form-label">District</label>
+                {{address_form.district}}
+              </div>
+
+              <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary py-2 btn-block">
+                  Proceed to dashboard
+                </button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+  $("#id_province").change(function () {
+    var url = $("#profileForm").attr("data-url");
+    var provinceId = $(this).val();
+
+    $.ajax({
+      url: url,
+      data: {
+        'province': provinceId
+      },
+      success: function (data) {
+        $("#id_district").html(data);
+      }
+    });
+
+  });
+</script>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} {% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+
+
+<div class="container content-space-1 content-space-lg-1">
+  <div class="w-lg-75 mx-lg-auto">
+
+    <div class="text-center mb-7">
+      <h1 class="card-title">Create a Seller Account</h1>
+    </div>
+
+    <div class="card card-bordered shadow-none">
+      <div class="card-body">
+
+        <form method="POST" id="profileForm" data-url="{% url 'ajax_load_districts' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row mb-3">
+            <label class="col-sm-3 col-form-label form-label">Store logo</label>
+
+            <div class="col-sm-9">
+
+              <div class="d-flex align-items-center">
+
+                <label class="avatar avatar-xl avatar-circle" for="id_logo">
+                  <img id="logo" class="avatar-img" src="{% static '/img/160x160/img2.jpg' %}" />
+                </label>
+                <div class="btn btn-primary btn-sm form-attachment-btn"> Upload Logo
+                  <input name="logo" type="file" class="js-file-attach form-attachment-btn-label"
+                    onchange="document.getElementById('logo').src = window.URL.createObjectURL(this.files[0])">
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+      </div>
+
+
+      <div class="col-md-12 mb-3">
+        <label for="id_title" class="form-label">Store Name / Display Name</label>
+        {{seller_form.title}}
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <label class="form-label">Mobile Number</label>
+          {{seller_form.mobile|as_crispy_field}}
+        </div>
+
+        <div class="col-md-6 col-12">
+          <label class="form-label">Telephone Number</label>
+          {{seller_form.telephone|as_crispy_field}}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6 mb-2">
+          <label class="form-label">Business Email</label>
+          {{seller_form.business_email}}
+        </div>
+
+        <div class="col-6 mb-2">
+          <label class="form-label">Business registration no. (PAN/VAT)</label>
+          {{seller_form.registration_no}}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <label class="form-label">Upload Business Document</label>
+          {{seller_form.business_document|as_crispy_field}}
+        </div>
+
+        <div class="col-md-6 col-12">
+          <label class="form-label">Upload VAT/PAN Document</label>
+          {{seller_form.vat_document|as_crispy_field}}
+        </div>
+      </div>
+
+      <div class="col-12">
+        <h3 class="my-3 font-weight-semi-bold">Store Address</h3>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-12 pb-2">
+          <label class="form-label">Building/Floor</label>
+          {{address_form.building}}
+        </div>
+
+        <div class="col-md-6 col-12 pb-2">
+          <label class="form-label">City</label>
+          {{address_form.city}}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <label class="form-label">Province</label>
+          {{address_form.province}}
+        </div>
+
+        <div class="col-md-6 col-12">
+          <label class="form-label">District</label>
+          {{address_form.district}}
+        </div>
+      </div>
+
+      <div class="text-center mt-5">
+        <button type="submit" class="btn btn-primary btn-lg">Proceed to Dashboard</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+  $("#id_province").change(function () {
+    var url = $("#profileForm").attr("data-url");
+    var provinceId = $(this).val();
+
+    $.ajax({
+      url: url,
+      data: {
+        'province': provinceId
+      },
+      success: function (data) {
+        $("#id_district").html(data);
+      }
+    });
+
+  });
+</script>
+
+
+
+
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %} {% endcomment %}

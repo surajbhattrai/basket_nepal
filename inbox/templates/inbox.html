@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load templatehelpers %}
+ 
+ 
+{% block content %}
+
+{% url 'message_list' as message_list_url %}
+{% url 'message_detail' conversation.id as message_detail_url %}
+
+
+<div class="container pt-md-5">
+
+    <div class="row">
+
+        <div class="col-xl-3 col-lg-12 col-md-12 col-12 vh-80 border border-2 border-end-0 rounded-start px-0 {% if request.path == message_detail_url %}d-none d-md-block {% endif %}">
+            <div class="js-nav-scroller hs-nav-scroller-vertical"
+                data-hs-nav-scroller-options='{"type": "vertical" }'>
+
+                <ul class="nav">
+
+                    {% for i in conversations %}
+
+                    {% if i.message_set.all|length > 0 %}    
+                    <li class="list-group-item list-group-item-action {% if i.id == conversation.id %}bg-soft-primary border border-primary rounded {% else %}border-0{% endif %} {% if i.message_set.last.receiver == user and i.message_set.last.seen == False %}bg-soft-warning{% endif %}">
+                        
+                        <a id="{% if i.get_absolute_url == message_detail_url %}active{% endif %}" class="d-flex" href="{% url 'message_detail' i.id %}?view={{request.GET.view}}&page={{request.GET.page}}">
+
+                            <div class="avatar avatar-circle avatar-soft-secondary">
+                                {% if i.user1.phone == user.phone %}
+                                    {{i.user2.profile_picture}}
+                                {% else %}
+                                    {{i.user1.profile_picture}}
+                                {% endif %}
+                            </div>
+
+                            <div class="ms-3">
+                                {% if i.user1.phone == user.phone %}
+                                    <span class="d-block h5 text-dark mb-1">{{ i.user2.get_full_name }}</span>
+                                {% else %}
+                                    <span class="d-block h5 text-dark mb-1">{{ i.user1.get_full_name }}</span>   
+                                {% endif %}
+
+
+                                <span class="d-block f-14 text-body">
+                                    {% if i.message_set.last.text|length > 0 %}
+                                    {{ i.message_set.last.text|truncatechars:20 }}
+                                    {% else %}
+                                    Image
+                                    {% endif %}
+                                </span>
+                                <small class="text-muted f-12">{{ i.message_set.last.timestamp|timesince }}
+                                    ago</small>
+                            </div>
+                            
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% empty %}
+                    <h2 class="text-center mt-5 px-3">No conversations yet!</h2>
+                    {% endfor %}
+
+                </ul>
+
+                <nav class="mt-4">
+                    {% if conversations.has_other_pages %}
+                    <ul class="pagination justify-content-center">
+                        {% if conversations.has_previous %}
+                        <a class="bi-arrow-left-circle-fill px-2 text-dark fs-2" href="{{request.path}}?page={{conversations.previous_page_number}}"></a>
+                        {% else %}
+                        <i class="bi bi-arrow-left-circle-fill px-2 text-muted fs-2"></i>
+                        {% endif %}
+    
+                        {% if conversations.has_next %}
+                        <a class="bi-arrow-right-circle-fill px-2 text-dark fs-2" href="{{request.path}}?page={{conversations.next_page_number}}"></a>
+                        {% else %}
+                        <a class="bi-arrow-right-circle-fill px-2 text-muted fs-2"></a>
+                        {% endif %}
+                    </ul>
+                    {% endif %}
+                </nav>
+
+            </div>
+        </div>
+
+        {% if request.path == message_detail_url %}
+        <div class="vh-80 col-xl-9 col-lg-12 col-md-12 col-12 border border-2 rounded-end px-0">
+            {% include 'message.html' %}
+            <div class="h-85">
+                <!-- <p class="f-16">Select a chat to start conversation.</p> -->
+
+                <div id="chat" class="js-nav-scroller hs-nav-scroller-vertical">
+                    <div class="row m-0 pb-4">
+                        <ul class="p-0 m-0">
+                            {% for message in msg %}
+
+                            <li class="list-group-item list-group-item-action border-0">
+                                <div class="d-flex gap-2 w-md-75">
+                                    <div>
+                                        <div class="avatar avatar-circle avatar-sm avatar-soft-secondary">
+                                            {% if message.sender.phone == user.phone %}
+                                                {{message.sender.profile_picture}}
+                                            {% else %}
+                                                {{message.sender.profile_picture}}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+
+                                    <div>
+                                        {% if message.sender.phone == user.phone %}
+                                        <h6>Me &nbsp;&nbsp;<span class="text-muted f-12 fw-normal">
+                                            {{message.timestamp|timesince }} ago</span>
+                                        </h6>
+                                        {% else %}
+                                        <h6>{{ message.sender.get_full_name }}&nbsp;&nbsp;<span
+                                                class="text-muted f-12 fw-normal">
+                                                {{ message.timestamp|timesince }} ago</span>
+
+                                                {% if message.sender.seller.position %}
+                                                <p class="mb-0 f-12 text-primary pt-1 fw-500">{{message.sender.seller.position}} at {{message.sender.seller.title}}.</p>
+                                                {% endif %}
+
+                                        </h6>
+                                        {% endif %}
+
+                                        <div>
+                                        <p class="mb-0 f-14 text-dark">{{ message.text }} </p>
+                                        {% if message.attachment %}
+                                        <img class="rounded-2 img-fluid bg-img-start mt-2"
+                                            src="{{ message.attachment.url }}" alt="attachment">
+                                        {% endif %}
+                                        </div>
+                                       
+
+
+                                        {% if message.product %}
+                                        <p class="fw-500 f-13 text-body pt-3 mb-2">This message is related to:</p>
+                                        <a class="card p-2 card-sm card-bordered shadow-none w-md-75"
+                                            href="{{message.product.get_absolute_url}}">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div>
+                                                    <img class="avatar avatar-lg rounded-1"
+                                                        src="{{message.product.img.url}}" alt="SVG">
+                                                </div>
+
+                                                <div>
+                                                    <p class="f-14 fw-400 text-body mb-0">{{message.product.title}}</p>
+                                                    <p class="f-14 fw-600 text-dark mb-0">Rs. {{message.product.price}}</p>
+                                                </div>
+   
+                                            </div>
+                                        </a>
+                                        {% endif %}
+
+                                        {% if message.request %}
+                                        <p class="fw-500 f-13 text-body pt-3 mb-2">This message is related to:</p>
+                                        <div class="card p-2 card-sm card-bordered shadow-none">
+                                            <p class="f-15 fw-500 text-dark mb-0">{{message.request.product_name}}</p>
+                                            <p class="f-14 text-body">{{message.request.content|truncatechars:60}}</p>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+
+                            </li>
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div>
+
+            
+            <form class="px-md-5 pb-10 px-2" method="POST" action="{% url 'send_message' id=conversation.id %}"
+                enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input-card border">
+
+                    <div class="input-card-form">
+                        <input name="text" type="text" class="form-control form-control-sm" placeholder="Type your message..." required>
+                        {% if conversation.user1 == request.user %}
+                            <input name="receiver" value="{{conversation.user2.id}}" type="number" hidden>
+                        {% endif %}
+
+                        {% if conversation.user2 == request.user %}
+                            <input name="receiver" value="{{conversation.user1.id}}" type="number" hidden>
+                        {% endif %}
+                    </div>
+
+                    <div class="avatar avatar-sm">
+                        <object id="attachment" class="avatar-img" data="" type="image/jpg"></object>
+                    </div>
+
+                    <label type="button" for="id_attachment">
+                        <i class="bi bi-paperclip fw-semi-bold fs-3 my-auto me-3 text-body"></i>
+                    </label>
+
+                    <input name="attachment" id="id_attachment" type="file" accept="image/png, image/jpeg"
+                        class="d-none"
+                        onchange="document.getElementById('attachment').data = window.URL.createObjectURL(this.files[0])">
+
+                    <button type="submit" class="btn btn-link p-0 fw-500 text-success my-auto me-3">Send</button>
+                </div>
+            </form>
+
+        </div>
+
+        </div>
+        {% endif %}
+
+
+        
+        {% if request.path == message_list_url %}
+        <div class="vh-80 col-xl-9 col-lg-12 col-md-12 col-12 border border-2 rounded-end px-0 d-none d-md-block">
+            <div class="h-85 position-relative">
+                <div class="position-absolute top-50 start-50 translate-middle text-center">
+                    <i class="bi bi-chat-dots display-1"></i>
+                    <h1>Select a conversation.</h1>
+                </div> 
+            </div>
+        </div>
+        {% endif %}
+
+
+    </div>
+</div>
+
+
+<script>
+    (function () {
+        new HsNavScroller('.js-nav-scroller')
+    });
+
+
+    var element = document.getElementById("chat");
+    element.scrollTop = element.scrollHeight;
+
+</script>
+
+
+<script>
+    document.getElementById('active').scrollIntoView({
+        behavior: 'smooth'
+    });
+</script>
+
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}

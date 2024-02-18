@@ -1,0 +1,94 @@
+{% extends "base.html" %} {% load static %} {% load mptt_tags %}
+
+{% block seller_header %}{% endblock %}
+
+
+{% block content %}
+
+<style>
+  .ts-wrapper .option .title {
+    font-size: 16px;
+    display: block;
+    padding-bottom: 10px;
+  }
+
+  .ts-wrapper .option .url {
+    font-size: 16px;
+    display: block;
+    color: #a0a0a0;
+  }
+</style>
+
+
+<div class="position-relative">
+  <div class="hero-section swiper bg-light">
+    
+    <div class="swiper-wrapper">
+      {% for i in sliders %}
+      <div class="swiper-slide">
+        <a href="{{i.url}}">
+          <img class="img-fluid banner-sm" src="{{i.image.url}}" alt="Basketnepal Images">
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="hero-section-button-next swiper-button-next"></div>
+    <div class="hero-section-button-prev swiper-button-prev"></div>
+
+  </div>
+</div>
+
+
+
+{% for i in all_sectors %}
+<div class="container mt-6">
+  <div class="store-slider swiper">
+    <div class="row flex-row pb-5">
+      <div class="col-sm">
+        <h2 class="fs-2 fw-700">{{i.name}}</h2>
+      </div>
+      <div class="col-sm-auto d-flex align-items-end">
+        <a class="text-dark fw-600 f-14" href="{% url 'stores' i.slug %}"> View more business <i
+            class="bi bi-arrow-right-circle-fill text-danger"></i></a>
+      </div>
+    </div>
+
+    <div class="swiper-wrapper">
+      {% for store in i.seller_category.all %}
+      <div class="swiper-slide">
+        <a class="card card-transition align-items-end flex-wrap flex-row shadow-none" href="{{store.get_absolute_url}}"
+          data-aos="fade-up">
+          <img class="rounded w-100" src="{{store.get_store_image}}" style="height: 10rem; object-fit: cover;" alt="">
+          <div class="py-2 px-1 text-dark">
+            <span class="fw-500">{{store.title|truncatechars:40}}</span>
+            <p class="f-12 mb-0"><i class="bi-geo-alt nav-icon"></i> {{store.address.district.district}}</p>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="store-slider-button-next swiper-button-next icon icon-sm" style="top: 60%;"></div>
+    <div class="store-slider-button-prev swiper-button-prev icon icon-sm" style="top: 60%;"></div>
+
+  </div>
+</div>
+{% endfor %}
+
+
+<div class="container my-5">
+  <h2 class="fs-2 pb-5 fw-700">Recent Products</h2>
+  <div class="row row-cols-sm-2 row-cols-md-5 row-cols-lg-4">
+    {% for i in products %}
+    {% include 'snippets/product_card.html' %}
+    {% endfor %}
+  </div>
+</div>
+
+
+
+
+
+
+{% endblock content %}

@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load mptt_tags %}
+
+{% load templatehelpers %}
+
+
+{% block content %}
+<div class="bg-light">
+  
+  <div class="container">
+    {% include 'message.html' %}
+  </div>
+
+  <div class="container pt-0 pt-md-5">
+
+    <div class="row">
+      <div class="col-lg-3 mb-5 mb-lg-0">
+        <div class="nav nav-pills nav-vertical rounded p-2 d-none d-md-block bg-white"
+          style="flex-direction:row !important;">
+
+          <p class="m-3 fw-600 f-13 text-uppercase text-dark">Business Types</p>
+
+          <a class="dropdown-item {% if not request.GET %} active {% endif %} f-15"
+            href="{% url 'stores' business_sector_obj.slug %}">
+            All Stores
+          </a>
+
+          {% for i in store_types %}
+          <a class="dropdown-item {% if i.slug == request.GET.store %} active {% endif %} f-15"
+            href="{{request.url}}?store={{ i.slug }}">
+            {{i.name}}
+          </a>
+          {% endfor %}
+
+        </div>
+      </div>
+
+      <div class="col-lg-9">
+
+        <div class="row gx-2">
+
+          <div class="col-lg mb-3">
+            <form>
+              <label for="search" class="visually-hidden form-label">Search for store</label>
+              <div class="input-group input-group-merge">
+                <span class="input-group-prepend input-group-text">
+                  <i class="bi-search"></i>
+                </span>
+                <input type="text" class="form-control" id="search" name="query" placeholder="Search for store"
+                  value="{{request.GET.query}}">
+              </div>
+            </form>
+          </div>
+
+          <div class="col-auto mb-2 mb-lg-0 d-md-none">
+            <a class="btn btn-sm rounded-pill fw-500 f-13 py-1 px-2 {% if request.GET.store %} btn-soft-primary {% else %} btn-white text-dark {% endif %}" data-bs-toggle="offcanvas" href="#type" role="button">Store Type<i class="bi bi-caret-down-fill f-12 ms-2"></i>
+            </a>
+          </div>
+
+          <div class="col-auto mb-2 mb-lg-0 d-md-none">
+            <select class="form-select form-select-sm rounded-pill fw-500 f-13 py-1" onchange="location = this.value;">
+              {% if request.GET.location %}
+              <option class="bg-soft-primary">{{request.GET.location}}</option>
+              {% endif %}
+              <option value="{% relative_url '' 'location' request.GET.urlencode %}">All Nepal</option>
+              {% for i in districts %}
+              {% with params=request.GET.urlencode %}
+              <option value="{% relative_url i.district 'location' params %}">{{i.district}}</option>
+              {% endwith %}
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-auto mb-2 mb-lg-0 d-md-block d-none">
+            <select class="form-select" onchange="location = this.value;">
+              {% if request.GET.location %}
+              <option>{{request.GET.location}}</option>
+              {% endif %}
+              <option value="{% relative_url '' 'location' request.GET.urlencode %}">All Nepal</option>
+              {% for i in districts %}
+              {% with params=request.GET.urlencode %}
+              <option value="{% relative_url i.district 'location' params %}">{{i.district}}</option>
+              {% endwith %}
+              {% endfor %}
+            </select>
+          </div>
+
+        </div>
+
+        <div>
+          <div class="js-swiper-slides-per-view-auto swiper">
+            <div class="swiper-wrapper">
+              {% for i in business.store_images.all %}
+              <div class="swiper-slide mb-5">
+                <img class="img-fluid rounded" alt="Basketnepal advertisement" src="{{i.image.url}}">
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="js-swiper-slides-per-view-auto-button-next swiper-button-next"></div>
+            <div class="js-swiper-slides-per-view-auto-button-prev swiper-button-prev"></div>
+          </div>
+
+        </div>
+
+        {% if request.GET.query %}
+        <div class="mb-3">
+          <h5>Search Results <span class="text-body">for "{{request.GET.query}}"</span></h5>
+        </div>
+        {% endif %}
+
+
+
+
+
+        <div class="d-grid gap-5">
+          {% for i in stores %}
+          <div class="card card-flush card-stretched-vertical">
+            <div class="row">
+
+              <div class="col-md-4">
+                <div class="card-pinned">
+                  <img class="card-img" style="height: 16rem; object-fit: cover;" src="{{i.get_store_image}}">
+                </div>
+              </div>
+
+              <div class="col-md-8">
+                <div class="card-body px-3 pt-1">
+                  <div class="d-flex gap-3">
+                    {% for icon in i.badge.all %}
+                      <img class="avatar" src="{{icon.image.url}}" >
+                    {% endfor %}
+                  </div>
+
+                  <h3 class="card-title">
+                    <a class="text-dark" href="{{i.get_absolute_url}}">{{i.title}}{{stores_url}}
+                    </a>
+                  </h3>
+
+                  <p class="small fw-500"><i class="bi-geo-alt-fill nav-icon"></i>
+                    {{i.address.district.district}}
+                    {% if i.address.city %}, {{i.address.city}}
+                    {% endif %}
+                  </p>
+
+                  <p class="card-text">{{i.bio}}</p>
+
+                  <div class="card-footer">
+
+                      <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                          <p class="card-text small mb-0">{{i.position}}</p>
+                          <a class="card-link link-dark" href="#">{{i.user.get_full_name}}</a>
+                        </div>
+
+                        <div>
+                          <a class="btn btn-ghost-info btn-sm fw-600" href="tel:{{i.telephone}}">
+                            <i class="bi-telephone-inbound-fill me-1"></i> {{i.telephone}}
+                          </a>
+                          <a class="btn btn-ghost-info btn-sm fw-600" href="tel:{{i.mobile}}">
+                            <i class="bi-phone-fill me-1"></i> {{i.mobile}}
+                          </a>
+                        </div>
+
+                      </div>
+ 
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+
+        <nav class="mt-4">
+          {% if stores.has_other_pages %}
+          <ul class="pagination justify-content-center">
+            {% if stores.has_previous %}
+            <li class="page-item"><a class="page-link"
+                href="{% relative_url stores.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link">Previous</a></li>
+            {% endif %}
+            {% for i in stores.paginator.page_range %}
+            {% if stores.number == i %}
+            <li class="page-item active"><a class="page-link">{{ i }} <a class="sr-only">(current)</a>
+            </li>
+            {% elif i > stores.number|add:'-5' and i < stores.number|add:'5' %} <li class="page-item"><a
+                class="page-link" href="{% relative_url i 'page' request.GET.urlencode %}">{{ i }}</a>
+              </li>
+              {% endif %}
+              {% endfor %}
+              {% if stores.has_next %}
+              <li class="page-item"><a class="page-link"
+                  href="{% relative_url stores.next_page_number 'page' request.GET.urlencode %}">Next</a>
+              </li>
+              {% else %}
+              <li class="disabled page-item"><a class="page-link">Next</a></li>
+              {% endif %}
+          </ul>
+          {% endif %}
+        </nav>
+
+
+      </div>
+
+    </div>
+    
+  </div>
+
+</div>
+
+
+<div class="offcanvas offcanvas-bottom h-75" tabindex="-1" id="type" style="overflow: scroll;">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="type">Business Types</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+
+  <div class="nav nav-pills nav-vertical p-2" style="flex-direction:row !important;">
+
+    <a class="dropdown-item {% if not request.GET %} active {% endif %} f-15"
+      href="{% url 'stores' business_sector_obj.slug %}">
+      All Stores
+    </a>
+
+    {% for i in store_types %}
+    <a class="dropdown-item {% if i.slug == request.GET.store %} active {% endif %} f-15"
+      href="{{request.url}}?store={{ i.slug }}">
+      {{i.name}}
+    </a>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+
+
+{% endblock content %}
